@@ -27,11 +27,11 @@ App({
     })
   },
   globalData: {
-    ip:'114.116.249.80',//ip 
+    ip:'abfree.top',//ip 
     part:'8989',//端口
     projectName:'znyq',//项目名称
     appid:'wx78518c4e0cebe111',//appid 
-    secret: '769f6c6245dc2ca5f186c85d5ed374d6',
+    secret: '769f6c6245dc2ca5f186c85d5ed374d6',   
     usercardid:'',
     useropenid:''
   }

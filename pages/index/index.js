@@ -63,40 +63,40 @@ Page({
     })
   },
   carapply:function(){
-    wx.navigateTo({
-      url: '../carapply/carapply'
-    })
-    // wx.request({
-    //   url: 'http://192.168.194.172:8088/znyq/api/get/auth/by/idnumber.do',
-    //   data: {
-    //   idNumber:app.globalData.usercardid
-    //   },
-    //   header: {
-    //     'content-type': 'application/x-www-form-urlencoded' 
-    //   },
-    //   method: 'POST',
-    //   success(res) {
-    //     if(res.data.data==false){
-    //       wx.showToast({
-    //         title: '您未取得入厂授权,不能直接申请车辆!',
-    //         icon: 'none',
-    //         duration: 1500
-    //       })
-    //       setTimeout(function() {
-    //         wx.hideToast()
-    //       }, 2000)
-    //     }else{
-    //       wx.navigateTo({
-    //         url: '../carapply/carapply'
-    //       })
-    //     }
-    //    console.log("__人员是否授权___"+JSON.stringify(res.data.data))
-    //   }
+    // wx.navigateTo({
+    //   url: '../carapply/carapply'
     // })
+    wx.request({
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/auth/by/idnumber.do',
+      data: {
+      idNumber:app.globalData.usercardid
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        if(res.data.data==false){
+          wx.showToast({
+            title: '您未取得入厂授权,不能直接申请车辆!',
+            icon: 'none',
+            duration: 1500
+          })
+          setTimeout(function() {
+            wx.hideToast()
+          }, 2000)
+        }else{
+          wx.navigateTo({
+            url: '../carapply/carapply'
+          })
+        }
+       console.log("__人员是否授权___"+JSON.stringify(res.data.data))
+      }
+    })
   },
   goodsapply:function(){
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/get/auth/by/idnumber.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/auth/by/idnumber.do',
       data: {
       idNumber:app.globalData.usercardid
       },
@@ -122,9 +122,6 @@ Page({
        console.log("__人员是否授权___"+JSON.stringify(res.data.data))
       }
     })
-    // wx.navigateTo({
-    //   url: '../goVisa/goVisa'
-    // })
   },
   goVisa:function(){
     wx.navigateTo({
@@ -164,7 +161,7 @@ Page({
           user.js_code=res.code
           user.id=that.data.card
           wx.request({
-            url: 'http://192.168.194.172:8088/znyq/api/login.do', 
+            url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/login.do', 
             data: {
               user:JSON.stringify(user)
             },

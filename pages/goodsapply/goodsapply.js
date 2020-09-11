@@ -31,7 +31,7 @@ Page({
     })
     //物品类型
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/get/object/type.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
       data: {
       },
       header: {
@@ -47,7 +47,7 @@ Page({
     })
     //基础信息
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/get/person/info.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
       data: {
         idNumber :app.globalData.usercardid
       },
@@ -188,7 +188,7 @@ Page({
     formList.objectAuthStartDate=that.data.start_date
     formList.objectAuthEndDate=that.data.end_date
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/object/apply/create.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/object/apply/create.do',
       data: {
         formList:JSON.stringify(formList)
       },

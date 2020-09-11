@@ -26,7 +26,7 @@ Page({
     var time = util.formatDate(new Date());
     //基础信息
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/get/person/info.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
       data: {
         idNumber :app.globalData.usercardid
       },
@@ -55,7 +55,7 @@ Page({
     })
     //车辆类型
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/get/car/type.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
       data: {
       },
       header: {
@@ -171,7 +171,7 @@ Page({
     formList.carTypeUid=that.data.objuid
     formList.carAuthDate=that.data.start_date
     wx.request({
-      url: 'http://192.168.194.172:8088/znyq/api/car/apply/create.do',
+      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/car/apply/create.do',
       data: {
         formList:JSON.stringify(formList)
       },
