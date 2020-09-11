@@ -1,0 +1,60 @@
+<scroll-view scroll-y="true" style="height:400px;">
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">身份证号：</view>
+		<input placeholder="请输入身份证号" bindinput="card"></input>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">姓名：</view>
+		<input placeholder="请输入姓名" bindinput="name"></input>
+  </view>
+  <view class="cu-bar bg-white">
+  <view class="action">
+    类型：
+  </view>
+  <view class="action">
+    <text>{{companyselect}}</text>
+    <button class="cu-btn bg-green shadow" bindtap="showModal" data-target="bottomModal">选择</button>
+  </view>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">数量：</view>
+		<input placeholder="请输入数量" bindinput="company"></input>
+  </view>
+</scroll-view>
+<view class="padding-xl">
+  <button bindtap="submitapply" class="cu-btn block margin-tb-sm bg-gradual-blue lg">
+    <text class="cuIcon-upload"></text> 提交申请</button>
+</view>
+<view class="cu-modal bottom-modal {{modalName=='bottomModal'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white">
+      <view class="action text-green" bindtap="companysure">确定</view>
+      <view class="action text-blue" bindtap="hideModal">取消</view>
+    </view>
+    <view style="width:100%;">
+      <view class="cu-bar search bg-white">
+        <view class="search-form round">
+          <text class="cuIcon-search"></text>
+          <input type="text" placeholder="搜索类型名称" confirm-type="search"></input>
+        </view>
+        <view class="action">
+          <button class="cu-btn bg-green shadow-blur round">搜索</button>
+        </view>
+      </view>
+    </view>
+    <scroll-view scroll-y="true" scroll-with-animation="true" style="height: 300px;">
+      <radio-group class="block">
+      <view  class="cu-list menu-avatar">
+        <view wx:for="{{unitlist}}" class="cu-item">
+          <view class="content">
+            <view class="text-grey">{{item.value}}</view>
+          </view>
+          <view class="action">
+            <radio data-id="{{item.id}}" data-value="{{item.value}}" bindtap="radio_select" class="radio"></radio>
+          </view>
+        </view>
+      </view>
+      </radio-group>
+    </scroll-view>
+  </view>
+</view>

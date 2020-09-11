@@ -1,0 +1,10 @@
+<view class="bg-img padding-tb-xl" style="background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599380984946&di=aefdbef67b1011d00302202a72e70409&imgtype=0&src=http%3A%2F%2Fa1.att.hudong.com%2F78%2F09%2F19300542185912149915095568748.jpg');height: 414rpx;">
+</view>
+
+<view style="text-align:center;margin-top:130rpx;">
+  <image style="width: 200px; height: 200px; background-color: #eeeeee;border:1px solid #6393e5;"  src="../../images/cs.png"></image>
+</view>
+<view style="margin-top:80rpx;">
+  <button style="width:30%;margin-left:15%;" class="cu-btn line-blue round " bindtap="goback" data-target="bottomModal">返回</button>
+  <button style="width:30%;margin-left:10%;" class="cu-btn line-blue round " bindtap="goindex" data-target="bottomModal">首页</button>
+</view>

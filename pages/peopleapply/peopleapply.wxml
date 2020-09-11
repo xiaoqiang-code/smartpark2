@@ -1,0 +1,177 @@
+
+<scroll-view scroll-top="{{scrolllocation}}px;" scroll-y="true" style="height:500px;">
+  <view class="cu-bar bg-white">
+    <view class="action">
+      <text class="cuIcon-title text-blue"></text>
+      <text class="text-xl text-blue text-bold">人员信息</text>
+    </view>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">身份证号：</view>
+		<input value="{{card}}" disabled></input>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">姓名：</view>
+		<input placeholder="请输入姓名" value="{{name}}" bindinput="name"></input>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">职务：</view>
+		<input placeholder="请输入职务" value="{{duty}}" bindinput="duty"></input>
+  </view>
+  <view id="qwe" style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">电话号码：</view>
+		<input placeholder="请输入电话号码" value="{{phonenum}}" bindinput="phonenum"></input>
+  </view>
+  <view class="cu-form-group">
+    <view class="title">授权起始日期：</view>
+    <picker mode="date" value="{{start_date}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange">
+      <view class="picker" value="{{start_date}}">
+        {{start_date}}
+      </view>
+    </picker>
+  </view>
+  <view class="cu-form-group">
+    <view class="title">授权结束日期：</view>
+    <picker mode="date" value="{{end_date}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange2">
+      <view class="picker">
+        {{end_date}}
+      </view>
+    </picker>
+  </view>
+  <view style="background-color:white;">
+    <text style="color:red;margin-left: 40rpx;font-size:25rpx;">注：授权终止时间到结束日期0点</text>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">所属公司：</view>
+		<input placeholder="请输入所属公司名称" value="{{company2}}" bindinput="company"></input>
+  </view>
+  <view class="cu-bar bg-white">
+  <view class="action">
+    拜访单位：
+  </view>
+  <view class="action">
+    <text style="margin-right:30rpx;">{{companyselect}}</text>
+    <button class="cu-btn line-blue round " bindtap="showModal" data-target="bottomModal">选择</button>
+  </view>
+  </view>
+
+  <view wx:if="{{display}}" class="cu-form-group">
+		<textarea maxlength="-1" bindinput="textareaAInput" placeholder="填写来访原因,如：从事xxx工作，为期x天。"></textarea>
+  </view>
+  
+
+
+<!-- 车辆信息 -->
+ <view wx:if="{{automobile}}">
+  <view class="cu-bar bg-white">
+    <view class="action">
+      <text class="cuIcon-title text-blue"></text>
+      <text class="text-xl text-blue text-bold">车辆信息</text>
+    </view>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">车牌号：</view>
+		<input placeholder="请输入车牌号(例：辽A88888)" bindinput="cardnum"></input>
+  </view>
+  <view class="cu-form-group">
+		<view class="title">车辆类型：</view>
+		<picker bindchange="PickerChange" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
+			<view class="picker">
+				{{index?objectArray[index].name:'未选择'}}
+			</view>
+		</picker>
+	</view>
+  <view class="cu-form-group">
+    <view class="title">授权日期(当天有效)：</view>
+    <picker mode="date" value="{{start_date2}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange3">
+      <view class="picker" value="{{start_date2}}">
+        {{start_date2}}
+      </view>
+    </picker>
+  </view>
+ </view>
+<!-- 物品信息 -->
+<view wx:if="{{goods}}">
+  <view class="cu-bar bg-white">
+    <view class="action">
+      <text class="cuIcon-title text-blue"></text>
+      <text class="text-xl text-blue text-bold">(限制)物品信息</text>
+    </view>
+  </view>
+  <view class="cu-form-group">
+		<view class="title">物品类型：</view>
+		<picker bindchange="PickerChange2" data-id="{{objectArray2[index2].id}}" value="{{index2}}" range="{{objectArray2}}" range-key="name">
+			<view class="picker">
+				{{index2?objectArray2[index2].name:'未选择'}}
+			</view>
+		</picker>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">物品数量：</view>
+		<input placeholder="请输入物品数量" value="1" bindchange="goodsnum"></input>
+  </view>
+  <view class="cu-form-group">
+  <view class="title">授权起始日期：</view>
+  <picker mode="date" value="{{goods_start_date}}" start="2020-01-01" end="2050-09-01" bindchange="goodsDateChange">
+    <view class="picker">
+      {{goods_start_date}}
+    </view>
+  </picker>
+  </view>
+  <view class="cu-form-group">
+    <view class="title">授权结束日期：</view>
+    <picker mode="date" value="{{goods_end_date}}" start="2020-01-01" end="2050-09-01" bindchange="goodsDateChange2">
+      <view class="picker">
+        {{goods_end_date}}
+      </view>
+    </picker>
+  </view>
+</view>
+
+</scroll-view>
+<view  style="padding: 20rpx 50rpx 0rpx 50rpx;width: 370rpx;float: left;">
+  <button bindtap="addautomobile" style="width: 290rpx;background-color:{{carbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
+    {{automobiletext}}</button>
+</view>
+<view  style="padding: 20rpx 50rpx 20rpx 50rpx;width: 370rpx;float: left;">
+  <button bindtap="addgoods" style="width: 290rpx;background-color:{{goodsbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
+    {{goodstext}}</button>
+</view>
+<view class="padding-xl">
+  <button bindtap="submitapply" style="background-color:#6393e5;color:white;" class="cu-btn block margin-tb-sm lg">
+    <text class="cuIcon-upload"></text> 提交申请</button>
+
+</view>
+<view class="cu-modal bottom-modal {{modalName=='bottomModal'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white">
+      <view class="action text-green" bindtap="companysure">确定</view>
+      <view class="action text-blue" bindtap="hideModal">取消</view>
+    </view>
+    <view style="width:100%;">
+      <view class="cu-bar search bg-white">
+        <view class="search-form round">
+          <text class="cuIcon-search"></text>
+          <input type="text" bindinput="bfdwss" placeholder="搜索单位名称" confirm-type="search"></input>
+        </view>
+        <view class="action">
+          <button bindtap="comsearch" class="cu-btn bg-green shadow-blur round">搜索</button>
+        </view>
+      </view>
+    </view>
+    <scroll-view scroll-y="true" scroll-with-animation="true" style="height: 500px;">
+      <radio-group class="block">
+      <view  class="cu-list menu-avatar">
+        <view wx:for="{{unitlist}}" style="height:80rpx;" class="cu-item">
+          <view style="left:70rpx;" class="content">
+            <view class="text-grey">{{item.name}}</view>
+          </view>
+          <view class="action">
+            <radio data-id="{{item.id}}" data-value="{{item.name}}" bindtap="radio_select" class="radio"></radio>
+          </view>
+        </view>
+      </view>
+      </radio-group>
+    </scroll-view>
+  </view>
+</view>

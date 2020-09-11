@@ -1,0 +1,32 @@
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">身份证号：</view>
+		<input placeholder="请输入身份证号" disabled value="{{card}}"></input>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">姓名：</view>
+		<input placeholder="请输入姓名" disabled value="{{name}}" ></input>
+  </view>
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">车牌号：</view>
+		<input placeholder="请输入车牌号(例：辽A88888)" bindinput="carnum"></input>
+  </view>
+  <view class="cu-form-group">
+		<view class="title">车辆类型：</view>
+		<picker bindchange="PickerChange" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
+			<view class="picker">
+				{{index?objectArray[index].name:'未选择'}}
+			</view>
+		</picker>
+	</view>
+  <view class="cu-form-group">
+    <view class="title">授权日期(当天有效)：</view>
+    <picker mode="date" value="{{start_date}}" start="2020-01-01" end="2090-09-01" bindchange="DateChange">
+      <view class="picker" value="{{start_date}}">
+        {{start_date}}
+      </view>
+    </picker>
+  </view>
+<view class="padding-xl">
+  <button bindtap="submitapply" class="cu-btn block margin-tb-sm bg-gradual-blue lg">
+    <text class="cuIcon-upload"></text> 提交申请</button>
+</view>

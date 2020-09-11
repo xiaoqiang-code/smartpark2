@@ -1,0 +1,25 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/qrcode/qrcode",
+    "pages/peopleapply/peopleapply",
+    "pages/goVisa/goVisa",
+    "pages/carapply/carapply",
+    "pages/goodsapply/goodsapply",
+    "pages/gomodify/gomodify",
+    "pages/gomodify_car/gomodify_car",
+    "pages/gomodify_goods/gomodify_goods",
+    "pages/HandleCode/HandleCode",
+    "pages/Myinformation/Myinformation"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0000FF",
+    "navigationBarTitleText": "首页",
+    "navigationBarTextStyle": "white"
+  },
+  "usingComponents": {
+    "cu-custom": "/colorui/components/cu-custom"
+  },
+  "sitemapLocation": "sitemap.json"
+}

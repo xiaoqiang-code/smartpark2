@@ -1,0 +1,11 @@
+.myview{
+  width:94%;
+  height:150px;
+  margin-top: 50px;
+  margin-left: 3%;
+  background-color:white;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, .05);
+  -webkit-box-shadow: #d4d2d2 0px 0px 10px;
+  -moz-box-shadow: #d4d2d2 0px 0px 10px;
+
+}

@@ -1,0 +1,62 @@
+<view class="bg-img padding-tb-xl" style="background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599380984946&di=aefdbef67b1011d00302202a72e70409&imgtype=0&src=http%3A%2F%2Fa1.att.hudong.com%2F78%2F09%2F19300542185912149915095568748.jpg');height: 414rpx;">
+</view>
+<view wx:if="{{login}}">
+  <scroll-view scroll-y="true" style="height:400px;">
+  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
+      <view class="action" bindtap="peopleapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        外来人员入场申请
+      </view>
+    </view>
+  </view>
+  
+  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
+      <view class="action" bindtap="carapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        临时车辆入场申请
+      </view>
+    </view>
+  </view>
+  <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
+      <view class="action" bindtap="goodsapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        (限制)物品携带入场申请
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
+      <view class="action" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        办理进度(二维码)查询
+      </view>
+    </view>
+  </view>
+  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
+      <view class="action" bindtap="goVisa" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        入场签证审批
+      </view>
+    </view>
+  </view>
+  <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx;padding-bottom: 20rpx; ">
+    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
+      <view class="action" bindtap="Myinformation" style="color:white;padding-top: 20rpx;font-size: 18px;">
+        我的信息
+      </view>
+    </view>
+  </view>
+</scroll-view>
+</view>
+<view wx:else>
+<view class="myview">
+  <view style="padding-top: 10px;" class="cu-form-group">
+		<view class="title">证件号：</view>
+		<input placeholder="胸卡号或身份证号" bindinput="card"></input>
+  </view>
+  <view class="padding flex flex-direction">
+    <button class="cu-btn bg-grey2 lg" bindtap="login">登录</button>
+  </view>
+</view>
+</view>
+ 
+

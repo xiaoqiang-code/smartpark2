@@ -1,0 +1,22 @@
+<scroll-view scroll-y="{{modalName==null}}" class="page {{modalName!=null?'show':''}}">
+  <view class="cu-list menu">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey">姓名</text>
+      </view>
+      <view class="action">
+        <text class="text-grey text-sm">张三</text>
+      </view>
+    </view>
+  </view>
+  <view class="cu-list menu">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey">身份证号</text>
+      </view>
+      <view class="action">
+        <text class="text-grey text-sm" style="text-align:left">1234567</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>

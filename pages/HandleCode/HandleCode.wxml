@@ -1,0 +1,145 @@
+<view class="cu-form-group" stylt="border:none">
+		<view class="title">提交时间:</view>
+		<picker style="margin-left: -30px;" mode="date" value="{{startdate}}" start="2000-01-01" end="2999-01-01" bindchange="StartDateChange">
+			<view class="picker">
+			 {{startdate}} 	
+			</view>
+		</picker>
+		<text style="margin-left:10px;">至</text>
+		<picker mode="date" value="{{enddate}}" start="2000-01-01" end="2999-01-01" bindchange="EndDateChange">
+			<view class="picker">
+				{{enddate}}
+			</view>
+		</picker>
+		<button bindtap="search" style="margin-left: 10px;" class="cu-btn line-blue round">查询</button>
+	</view>
+	<scroll-view scroll-y="true" style="width:100%;height:500px;">
+		<view wx:for="{{applylist}}">
+			<!-- 人员 -->
+			<view  wx:if="{{item.busType==0}}" class="cu-card article no-card" style="border-bottom: 1px #33ccff dashed;border-top: 1px #33ccff dashed;background-color:white;">
+				<view class="cu-item shadow" style="padding-top:30rpx;">
+					<view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">类型：人员入厂申请</view>
+						<view style="width:220rpx;height:200rpx;float:right;margin-left:20rpx;">
+							<view wx:if="{{item.status!=10}}">
+								<view>
+									<button bindtap="revoke" data-objuid="{{item.objuid}}" data-type="{{item.busType}}" style="margin-left: 10px;" class="cu-btn line-green round">撤回</button>
+								</view>
+					<!--		<view style="margin-top:20rpx;">
+									<button style="margin-left: 10px;" class="cu-btn line-red round" bindtap="showModalno" data-target="DialogModal1" data-objuid="{{item.objuid}}" data-type="{{item.busType}}">修改</button>
+								</view> -->	
+								<view style="margin-top:20rpx;">
+									<button style="margin-left: 10px;" class="cu-btn line-red round" bindtap="modify" data-target="DialogModal1" data-objuid="{{item.objuid}}" data-type="{{item.busType}}">修改</button>
+								</view>
+							</view>
+							<view wx:if="{{item.status==10}}">
+								<view class="cu-tag line-green radius">生成二维码</view>
+							</view>
+							<view >
+								<button bindtap="detail" data-index="{{index}}" data-target="Modal" style="margin-left: 10px;" class="cu-btn line-blue round">查看详细</button>
+							</view>
+						</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">访客姓名：{{item.name}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">来访事由：{{item.resonForVisiting}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">授权日期：{{item.visitorAuthRange}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">提交时间：{{item.submitTime}}</view>
+							<view style="width:600rpx;height:50rpx;float:left;padding-left:20rpx;"><text style="color:red;" bindtap="showModal" data-target="bottomModal">审批状态:{{item.statusName}}</text></view>				
+					</view>
+				</view>
+			</view>
+			<!-- 物品 -->
+			<view wx:if="{{item.busType==2}}" class="cu-card article no-card" style="border-bottom: 1px #33ccff dashed;border-top: 1px #33ccff dashed;background-color:white;">
+				<view class="cu-item shadow" style="padding-top:30rpx;">
+					<view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">类型：物品申请</view>
+						<view style="width:220rpx;height:200rpx;float:right;margin-left:20rpx;">
+							<view wx:if="{{item.status!=10}}">
+								<view>
+									<button bindtap="revoke" data-objuid="{{item.objuid}}" data-type="{{item.busType}}" style="margin-left: 10px;" class="cu-btn line-green round">撤回</button>
+								</view>
+								<view style="margin-top:20rpx;">
+									<button style="margin-left: 10px;" data-objuid="{{item.objuid}}" data-type="{{item.busType}}" class="cu-btn line-red round" bindtap="modify_goods" data-target="DialogModal1">修改</button>
+								</view>
+							</view>
+							<view wx:else style="margin-left:27rpx;">
+								<view class="cu-tag line-green radius">生成二维码</view>
+							</view>
+						</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">物品类型：{{item.objectTypeName}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">携带人：{{item.name}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">授权日期：{{item.objectTypeName}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">所属公司：{{item.companyName}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">提交时间：{{item.submitTime}}</view>
+					</view>
+				</view>
+			</view>
+			<!-- 车辆 -->
+			<view wx:if="{{item.busType==1}}" class="cu-card article no-card" style="border-bottom: 1px #33ccff dashed;border-top: 1px #33ccff dashed;background-color:white;">
+				<view class="cu-item shadow" style="padding-top:30rpx;">
+					<view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">类型：车辆入厂申请</view>
+						<view style="width:220rpx;height:200rpx;float:right;margin-left:20rpx;">
+							<view wx:if="{{item.status!=10}}">
+								<view >
+									<button bindtap="revoke" data-objuid="{{item.objuid}}" data-type="{{item.busType}}" style="margin-left: 10px;" class="cu-btn line-green round">撤回</button>
+								</view>
+								<view style="margin-top:20rpx;">
+									<button style="margin-left: 10px;" data-objuid="{{item.objuid}}" data-type="{{item.busType}}" class="cu-btn line-red round" bindtap="modify_car" data-target="DialogModal1">修改</button>
+								</view>
+							</view>
+							<view wx:else style="margin-left:27rpx;">
+								<view class="cu-tag line-green radius">生成二维码</view>
+							</view>
+						</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">车辆类型：{{item.carTypeName}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">绑定人员：{{item.name}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">授权日期：{{item.carAuthDate}}	</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">所属公司：{{item.companyName}}</view>
+						<view style="width:470rpx;height:50rpx;float:left;padding-left:20rpx;">提交时间：{{item.submitTime}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</scroll-view>
+<!-- 驳回输入 -->
+<view class="cu-modal {{modalNameno=='DialogModal1'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">填写驳回原因</view>
+    </view>
+    <view class="padding-xl">
+      <input type="text" bindinput="reason"></input>
+    </view>
+    <view class="cu-bar bg-white justify-end">
+      <view class="action">
+        <button class="cu-btn line-green text-green" bindtap="hideModalno">取消</button>
+        <button class="cu-btn bg-green margin-left" bindtap="reject">确定</button>
+      </view>
+    </view>
+  </view>
+</view>
+<!-- 详细 -->
+<view class="cu-modal {{modalNamedetail=='Modal'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">申请详细</view>
+      <view class="action" bindtap="hideModaldetail">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <view class="padding-xl" style="text-align: left;">
+      <view style="height:45rpx;">访客姓名：{{xm}}</view>
+      <view style="height:45rpx;">来访事由：{{lfsy}}</view>
+      <view style="height:45rpx;">授权日期：{{sqrq}}</view>
+      <view style="height:45rpx;">来访单位：{{lfdw}}</view>
+      <view style="height:45rpx;">提交时间：{{tjsj}}</view>
+      <view style="height:45rpx;">所属公司：{{ssgs}}</view>
+      <view style="height:45rpx;">车牌号：{{cph2}}</view>
+      <view style="height:45rpx;">车辆类型：{{cllx2}}</view>
+      <view style="height:45rpx;">授权日期：{{clsqrq2}}</view>
+      <view style="height:45rpx;">物品类型：{{wplx2}}</view>
+      <view style="height:45rpx;">物品数量：{{wpsl2}}</view>
+      <view style="height:45rpx;">授权日期：{{wpsqrq2}}</view>
+    </view>
+  </view>
+</view>
