@@ -2,7 +2,7 @@
 </view>
 
 <view style="text-align:center;margin-top:130rpx;">
-  <image style="width: 200px; height: 200px; background-color: #eeeeee;border:1px solid #6393e5;"  src="../../images/cs.png"></image>
+  <image style=" background-color: #eeeeee;border:1px solid #6393e5;"  src="{{src}}"></image>
 </view>
 <view style="margin-top:80rpx;">
   <button style="width:30%;margin-left:15%;" class="cu-btn line-blue round " bindtap="goback" data-target="bottomModal">返回</button>

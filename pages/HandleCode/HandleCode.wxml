@@ -29,7 +29,7 @@
 									<button style="margin-left: 10px;" class="cu-btn line-red round" bindtap="showModalno" data-target="DialogModal1" data-objuid="{{item.objuid}}" data-type="{{item.busType}}">修改</button>
 								</view> -->	
 								<view style="margin-top:20rpx;">
-									<button style="margin-left: 10px;" class="cu-btn line-red round" bindtap="modify" data-target="DialogModal1" data-objuid="{{item.objuid}}" data-type="{{item.busType}}">修改</button>
+									<button style="margin-left: 10px;" class="cu-btn line-red round" bindtap="modify" data-target="DialogModal1" data-objuid="{{item.objuid}}" data-name="{{item.name}}" data-date="{{item.visitorAuthRange}}" data-company="{{item.companyName}}" data-dw="{{item.managerDeptName}}" data-type="{{item.busType}}" data-reason="{{item.resonForVisiting}}" data-carnum="{{item.plateNumber}}" data-cartype="{{item.carTypeName}}" data-cardate="{{item.carAuthDate}}" data-goodstype="{{item.objectTypeName}}" data-goodsnum="{{item.objectCount}}" data-goodsdate="{{item.objectAuthRange}}">修改</button>
 								</view>
 							</view>
 							<view wx:if="{{item.status==10}}">

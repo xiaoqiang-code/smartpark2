@@ -203,7 +203,7 @@ wx.request({
       return
     }
     var condition={}
-    condition.idNumber='211404199005224424'
+    condition.idNumber=app.globalData.usercardid
     condition.startDate=that.data.startdate
     condition.endDate=that.data.enddate
     wx.request({
@@ -362,8 +362,8 @@ wx.request({
     reject.objuid=that.data.objuid
     reject.busType=that.data.bustype
     reject.reason=that.data.reason
-    //reject.idNumber=app.globalData.usercardid
-    reject.idNumber='211404199005224424'
+    reject.idNumber=app.globalData.usercardid
+    //reject.idNumber='211404199005224424'
     wx.request({
       url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/apply/reject.do',
       data: {

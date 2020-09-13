@@ -2,7 +2,7 @@
 </view>
 <view wx:if="{{login}}">
   <scroll-view scroll-y="true" style="height:400px;">
-  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
       <view class="action" bindtap="peopleapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
         外来人员入场申请
@@ -10,14 +10,14 @@
     </view>
   </view>
   
-  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
       <view class="action" bindtap="carapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
         临时车辆入场申请
       </view>
     </view>
   </view>
-  <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
       <view class="action" bindtap="goodsapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
         (限制)物品携带入场申请
@@ -26,25 +26,25 @@
   </view>
   <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
-      <view class="action" style="color:white;padding-top: 20rpx;font-size: 18px;">
+      <view class="action" bindtap="goHandleCode" style="color:white;padding-top: 20rpx;font-size: 18px;">
         办理进度(二维码)查询
       </view>
     </view>
   </view>
-  <view  class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
+  <view wx:if="{{flag==2}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
       <view class="action" bindtap="goVisa" style="color:white;padding-top: 20rpx;font-size: 18px;">
         入场签证审批
       </view>
     </view>
   </view> 
-  <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx;padding-bottom: 20rpx; ">
+  <!-- <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx;padding-bottom: 20rpx; ">
     <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
       <view class="action" bindtap="Myinformation" style="color:white;padding-top: 20rpx;font-size: 18px;">
         我的信息
       </view>
     </view>
-  </view>
+  </view> -->
 </scroll-view>
 </view>
 <view wx:else>

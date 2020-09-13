@@ -25,7 +25,6 @@ Page({
           user.js_code=res.code 
           wx.request({
             url:'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/login/info.do',
-            //url: 'http://192.168.194.172:8088/znyq/api/get/login/info.do', 
             data: {
               user:JSON.stringify(user)
             },
@@ -63,9 +62,6 @@ Page({
     })
   },
   carapply:function(){
-    // wx.navigateTo({
-    //   url: '../carapply/carapply'
-    // })
     wx.request({
       url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/auth/by/idnumber.do',
       data: {
@@ -137,6 +133,11 @@ Page({
     var that=this
     that.setData({
       card:e.detail.value
+    })
+  },
+  goHandleCode:function(){
+    wx.navigateTo({
+      url: '../HandleCode/HandleCode'
     })
   },
   login:function(){

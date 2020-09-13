@@ -20,6 +20,7 @@ Page({
     goodsnum:'',
     cardtype:'',
     goodstype:'',
+    scrolllocation:0,
     start_date: '2000-01-01',
     end_date: '2000-01-01',
     start_date2: '2000-01-01',
@@ -37,6 +38,32 @@ Page({
     objectArray: [],
     objectArray2: [],
     unitlist: [], 
+    reason:'',
+    carbgcolor:'#6393e5',
+    goodsbgcolor:'#6393e5',
+    objuid3:'',
+
+
+    switchovercarid:'切换新能源车牌',
+    switchovercartext:'changeplate',
+    isKeyboard: !1,
+    isNumberKB: !1,
+    tapNum: !1,
+    disableKey: "1234567890港澳学",
+    keyboardNumber: "1234567890ABCDEFGHJKLMNPQRSTUVWXYZ港澳学",
+    keyboard1: "京沪粤津冀晋蒙辽吉黑苏浙皖闽赣鲁豫鄂湘桂琼渝川贵云藏陕甘青宁新",
+    inputPlates: {
+      index0: "",
+      index1: "",
+      index2: "",
+      index3: "",
+      index4: "",
+      index5: "",
+      index6: "",
+      index7: ""
+    },
+    inputOnFocusIndex: "",
+    flag:true
   },
 
   /**
@@ -45,6 +72,40 @@ Page({
   onLoad: function (options) {
     var that = this
     var time = util.formatDate(new Date());
+    var list=JSON.parse(options.list);
+    that.setData({
+      card:app.globalData.usercardid,
+      name:list[0].name,
+      start_date:list[0].startdate,
+      end_date:list[0].enddate,
+      company2:list[0].company,
+      //companyselect:list[0].dw,
+      cause:list[0].reason,
+      cardnum:list[0].carnum,
+      //cardtype:list[0].cartype,
+      start_date2:list[0].cardate,
+      goodsnum:list[0].goodsnum,
+      //goodstype:list[0].goodstype,
+      goods_start_date:list[0].goodsstartdate,
+      goods_end_date:list[0].goodsenddate,
+      objuid3:list[0].objuid
+    })
+    //判断是否带有车辆信息
+    if(list[0].carnum!=''&&list[0].carnum!=null){
+      that.setData({
+        automobiletext:'删除车辆',
+        automobile:true,
+        carbgcolor:'red'
+      })
+    }
+    //判断是否带有物品信息
+    if(list[0].goodstype!=''&&list[0].goodstype!=null){
+      that.setData({
+        goodstext:'删除(限制)物品',
+        goods:true,
+        goodsbgcolor:'red'
+      })
+    }
     //车辆类型
     wx.request({
       url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
@@ -93,45 +154,45 @@ Page({
        console.log("####"+JSON.stringify(res))
       }
     })
-    //基础信息
-    wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
-      data: {
-        idNumber :app.globalData.usercardid
-      },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded' 
-      },
-      method: 'POST',
-      success(res) {
-        if(res.data.status==200){
-          that.setData({
-            card:res.data.data.idNumber,
-            name:res.data.data.name,
-            duty:res.data.data.businessName,
-            phonenum:res.data.data.phoneNumber,
-            company2:res.data.data.companyName
-          })
-        }else{
-          wx.showToast({
-            title: '网络错误!',
-            icon: 'none',
-            duration: 1500
-          })
-          setTimeout(function() {
-            wx.hideToast()
-          }, 2000)
-        }
-       console.log("*****"+JSON.stringify(res))
-      }
-    })
-    that.setData({
-      start_date: time,
-      end_date: time,
-      start_date2:time,
-      goods_start_date:time,
-      goods_end_date:time
-    })
+    // //基础信息
+    // wx.request({
+    //   url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
+    //   data: {
+    //     idNumber :app.globalData.usercardid
+    //   },
+    //   header: {
+    //     'content-type': 'application/x-www-form-urlencoded' 
+    //   },
+    //   method: 'POST',
+    //   success(res) {
+    //     if(res.data.status==200){
+    //       that.setData({
+    //         card:res.data.data.idNumber,
+    //         name:res.data.data.name,
+    //         duty:res.data.data.businessName,
+    //         phonenum:res.data.data.phoneNumber,
+    //         company2:res.data.data.companyName
+    //       })
+    //     }else{
+    //       wx.showToast({
+    //         title: '网络错误!',
+    //         icon: 'none',
+    //         duration: 1500
+    //       })
+    //       setTimeout(function() {
+    //         wx.hideToast()
+    //       }, 2000)
+    //     }
+    //    console.log("*****"+JSON.stringify(res))
+    //   }
+    // })
+    // that.setData({
+    //   start_date: time,
+    //   end_date: time,
+    //   start_date2:time,
+    //   goods_start_date:time,
+    //   goods_end_date:time
+    // })
   },
   DateChange(e) {
     this.setData({
@@ -272,29 +333,37 @@ Page({
   },
   addautomobile:function(){
     var that=this
-    if(that.data.automobile){
+    if(that.data.automobiletext=='删除车辆'){
       that.setData({
+        scrolllocation:0,
         automobiletext:'添加车辆',
         automobile:false,
+        carbgcolor:'#6393e5'
       })
     }else{
       that.setData({
+        scrolllocation:500,
         automobiletext:'删除车辆',
         automobile:true,
+        carbgcolor:'red'
       })
     }
   },
   addgoods:function(){
     var that=this
-    if(that.data.goods){
+    if(that.data.goodstext=='删除(限制)物品'){
       that.setData({
+        scrolllocation:0,
         goodstext:'添加(限制)物品',
         goods:false,
+        goodsbgcolor:'#6393e5'
       })
     }else{
       that.setData({
+        scrolllocation:500,
         goodstext:'删除(限制)物品',
         goods:true,
+        goodsbgcolor:'red'
       })
     }
   },
@@ -340,28 +409,28 @@ Page({
       }, 2000)
       return
     }
-    if (that.data.duty.replace(/\s*/g, "") == '' || that.data.duty == null) {
-      wx.showToast({
-        title: '职务不得为空!',
-        icon: 'none',
-        duration: 1500
-      })
-      setTimeout(function() {
-        wx.hideToast()
-      }, 2000)
-      return
-    }
-    if (that.data.phonenum.replace(/\s*/g, "") == '' || that.data.phonenum == null) {
-      wx.showToast({
-        title: '电话号码不得为空!',
-        icon: 'none',
-        duration: 1500
-      })
-      setTimeout(function() {
-        wx.hideToast()
-      }, 2000)
-      return
-    }
+    // if (that.data.duty.replace(/\s*/g, "") == '' || that.data.duty == null) {
+    //   wx.showToast({
+    //     title: '职务不得为空!',
+    //     icon: 'none',
+    //     duration: 1500
+    //   })
+    //   setTimeout(function() {
+    //     wx.hideToast()
+    //   }, 2000)
+    //   return
+    // }
+    // if (that.data.phonenum.replace(/\s*/g, "") == '' || that.data.phonenum == null) {
+    //   wx.showToast({
+    //     title: '电话号码不得为空!',
+    //     icon: 'none',
+    //     duration: 1500
+    //   })
+    //   setTimeout(function() {
+    //     wx.hideToast()
+    //   }, 2000)
+    //   return
+    // }
     if (that.data.company2.replace(/\s*/g, "") == '' || that.data.company2 == null) {
       wx.showToast({
         title: '所属公司不得为空!',
@@ -396,6 +465,33 @@ Page({
         }, 2000)
         return
       }
+      if(that.data.switchovercarid=='切换新能源车牌'){
+        if(that.data.cardnum.length<7){
+
+          wx.showToast({
+            title: '车牌号输入有误!',
+            icon: 'none',
+            duration: 1500
+          })
+          setTimeout(function() {
+            wx.hideToast()
+          }, 2000)
+          return
+        }
+      }
+      if(that.data.switchovercarid=='切换普通车牌'){
+        if(that.data.cardnum.length<8){
+          wx.showToast({
+            title: '车牌号输入有误!',
+            icon: 'none',
+            duration: 1500
+          })
+          setTimeout(function() {
+            wx.hideToast()
+          }, 2000)
+          return
+        }
+      }
       if (that.data.cardtype.replace(/\s*/g, "") == '' || that.data.cardtype == null) {
         wx.showToast({
           title: '请选择车辆类型!',
@@ -420,7 +516,7 @@ Page({
         }, 2000)
         return
       }
-      if (that.data.goodsnum.replace(/\s*/g, "") == '' || that.data.goodsnum == null) {
+      if ( that.data.goodsnum == null) {
         wx.showToast({
           title: '(限制)物品数量不得为空!',
           icon: 'none',
@@ -433,8 +529,8 @@ Page({
       }
     }
     var formlist={}
-    
     formlist.idNumber=that.data.card
+    formlist.objuid=that.data.objuid3
     formlist.name=that.data.name
     formlist.businessName=that.data.duty
     formlist.phoneNumber=that.data.phonenum
@@ -465,39 +561,263 @@ Page({
     }else{
       
     }
-    
-    wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/create.do',
-      data: {
-        formList:JSON.stringify(formlist)
+    console.log("___修改提交___"+JSON.stringify(formlist))
+    // wx.request({
+    //   url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/create.do',
+    //   data: {
+    //     formList:JSON.stringify(formlist)
+    //   },
+    //   header: {
+    //     'content-type': 'application/x-www-form-urlencoded' 
+    //   },
+    //   method: 'POST',
+    //   success(res) {
+    //     if(res.data.status==200){
+    //       wx.showToast({
+    //         title:'申请成功' ,
+    //         icon: 'success',
+    //         duration: 1500
+    //       })
+    //       setTimeout(function() {
+    //         wx.hideToast()
+    //       }, 2000)
+    //     }
+    //     if(res.data.status==500){
+    //       wx.showToast({
+    //         title:res.data.message ,
+    //         icon: 'none',
+    //         duration: 1500
+    //       })
+    //       setTimeout(function() {
+    //         wx.hideToast()
+    //       }, 2000)
+    //     }
+    //    console.log(JSON.stringify(res))
+    //   }
+    // })
+  },
+  //车牌号输入法
+
+
+  //切换车牌
+  changeplate:function(){
+    var that = this;
+    that.setData({
+      flag:false,
+      switchovercarid:'切换普通车牌',
+      switchovercartext:'changeplate1',
+      cardnum:'',
+      inputPlates: {
+        index0: "",
+        index1: "",
+        index2: "",
+        index3: "",
+        index4: "",
+        index5: "",
+        index6: "",
+        index7: ""
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded' 
-      },
-      method: 'POST',
-      success(res) {
-        if(res.data.status==200){
-          wx.showToast({
-            title:'申请成功' ,
-            icon: 'success',
-            duration: 1500
-          })
-          setTimeout(function() {
-            wx.hideToast()
-          }, 2000)
-        }
-        if(res.data.status==500){
-          wx.showToast({
-            title:res.data.message ,
-            icon: 'none',
-            duration: 1500
-          })
-          setTimeout(function() {
-            wx.hideToast()
-          }, 2000)
-        }
-       console.log(JSON.stringify(res))
-      }
     })
-  }
+  },
+  //切换车牌
+  changeplate1: function () {
+    var that = this;
+    that.setData({
+      flag: true,
+      switchovercarid:'切换新能源车牌',
+      switchovercartext:'changeplate',
+      cardnum:'',
+      inputPlates: {
+        index0: "",
+        index1: "",
+        index2: "",
+        index3: "",
+        index4: "",
+        index5: "",
+        index6: "",
+        index7: ""
+      },
+    })
+  },
+
+
+  //打开输入法
+  inputClick:function(t){
+    var that = this;
+    console.log('输入框:', t)
+    that.setData({
+      inputOnFocusIndex : t.target.dataset.id,
+      isKeyboard: !0
+    })
+    "0" == this.data.inputOnFocusIndex ? that.setData({
+      tapNum: !1,
+      isNumberKB: !1
+    }) : "1" == this.data.inputOnFocusIndex ? that.setData({
+      tapNum: !1,
+      isNumberKB: !0
+    }) : that.setData({
+      tapNum: !0,
+      isNumberKB: !0
+    });
+ 
+  },
+
+  //键盘点击事件
+  tapKeyboard: function (t) {
+    t.target.dataset.index;
+    var a = t.target.dataset.val;
+    console.log('键盘:',a)
+    switch (this.data.inputOnFocusIndex) {
+      case "0":
+        this.setData({
+          "inputPlates.index0": a,
+          inputOnFocusIndex: "1"
+        });
+        break;
+ 
+      case "1":
+        this.setData({
+          "inputPlates.index1": a,
+          inputOnFocusIndex: "2"
+        });
+        break;
+ 
+      case "2":
+        this.setData({
+          "inputPlates.index2": a,
+          inputOnFocusIndex: "3"
+        });
+        break;
+ 
+      case "3":
+        this.setData({
+          "inputPlates.index3": a,
+          inputOnFocusIndex: "4"
+        });
+        break;
+ 
+      case "4":
+        this.setData({
+          "inputPlates.index4": a,
+          inputOnFocusIndex: "5"
+        });
+        break;
+ 
+      case "5":
+        this.setData({
+          "inputPlates.index5": a,
+          inputOnFocusIndex: "6"
+        });
+        break;
+ 
+      case "6":
+        this.setData({
+          "inputPlates.index6": a,
+          inputOnFocusIndex: "7"
+        });
+        break;
+ 
+      case "7":
+        this.setData({
+          "inputPlates.index7": a,
+          inputOnFocusIndex: "7"
+        });
+ 
+    }
+    var n = this.data.inputPlates.index0 + this.data.inputPlates.index1 + this.data.inputPlates.index2 + this.data.inputPlates.index3 + this.data.inputPlates.index4 + this.data.inputPlates.index5 + this.data.inputPlates.index6 + this.data.inputPlates.index7
+    console.log('车牌号:',n)
+    this.setData({
+      cardnum:n
+    })
+    this.checkedSubmitButtonEnabled();
+  },
+  //键盘关闭按钮点击事件
+  tapSpecBtn: function (t) {
+    var a = this, e = t.target.dataset.index;
+    if (0 == e) {
+      switch (parseInt(this.data.inputOnFocusIndex)) {
+        case 0:
+          this.setData({
+            "inputPlates.index0": "",
+            inputOnFocusIndex: "0"
+          });
+          break;
+ 
+        case 1:
+          this.setData({
+            "inputPlates.index1": "",
+            inputOnFocusIndex: "0"
+          });
+          break;
+ 
+        case 2:
+          this.setData({
+            "inputPlates.index2": "",
+            inputOnFocusIndex: "1"
+          });
+          break;
+ 
+        case 3:
+          this.setData({
+            "inputPlates.index3": "",
+            inputOnFocusIndex: "2"
+          });
+          break;
+ 
+        case 4:
+          this.setData({
+            "inputPlates.index4": "",
+            inputOnFocusIndex: "3"
+          });
+          break;
+ 
+        case 5:
+          this.setData({
+            "inputPlates.index5": "",
+            inputOnFocusIndex: "4"
+          });
+          break;
+ 
+        case 6:
+          this.setData({
+            "inputPlates.index6": "",
+            inputOnFocusIndex: "5"
+          });
+          break;
+ 
+        case 7:
+          this.setData({
+            "inputPlates.index7": "",
+            inputOnFocusIndex: "6"
+          });
+      }
+      this.checkedSubmitButtonEnabled();
+    } else 1 == e && a.setData({
+      isKeyboard: !1,
+      isNumberKB: !1,
+      inputOnFocusIndex: ""
+    });
+  },
+  //键盘切换
+  checkedKeyboard: function () {
+    var t = this;
+    "0" == this.data.inputOnFocusIndex ? t.setData({
+      tapNum: !1,
+      isNumberKB: !1
+    }) : "1" == this.data.inputOnFocusIndex ? t.setData({
+      tapNum: !1,
+      isNumberKB: !0
+    }) : this.data.inputOnFocusIndex.length > 0 && t.setData({
+      tapNum: !0,
+      isNumberKB: !0
+    });
+  },
+  checkedSubmitButtonEnabled: function () {
+    this.checkedKeyboard();
+    var t = !0;
+    for (var a in this.data.inputPlates) if ("index7" != a && this.data.inputPlates[a].length < 1) {
+      t = !1;
+      break;
+    }
+  },
 })

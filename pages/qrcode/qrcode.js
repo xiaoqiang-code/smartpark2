@@ -1,4 +1,5 @@
 // pages/qrcode/qrcode.js
+var app = getApp()
 Page({
 
   /**
@@ -12,7 +13,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    var that=this
+    that.setData({
+      src:'http://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/qrcode/by/form/objuid.do?objuid=2C063DA17FEC4CED8D7CBA873ECB7133&busType=0'
+    })
   },
 
   /**

@@ -27,7 +27,8 @@ App({
     })
   },
   globalData: {
-    ip:'abfree.top',//ip 
+    //ip:'abfree.top',//ip线上
+    ip:'192.168.194.172:8088',//ip本地 
     part:'8989',//端口
     projectName:'znyq',//项目名称
     appid:'wx78518c4e0cebe111',//appid 

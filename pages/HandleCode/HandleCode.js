@@ -135,9 +135,33 @@ Page({
       searchcontent:null
     })
   },
-  modify:function(){
+  modify:function(e){
+    var list={}
+    list.objuid=e.currentTarget.dataset.objuid
+    list.name=e.currentTarget.dataset.name
+    var date=e.currentTarget.dataset.date
+    var startdate=date.split("~")[0]
+    var enddate=startdate.split("-")[0]+"-"+date.split("~")[1]
+    list.startdate=startdate
+    list.enddate=enddate
+    list.company=e.currentTarget.dataset.company
+    list.dw=e.currentTarget.dataset.dw
+    list.reason=e.currentTarget.dataset.reason
+    list.carnum=e.currentTarget.dataset.carnum
+    list.cartype=e.currentTarget.dataset.cartype
+    list.cardate=e.currentTarget.dataset.cardate
+    list.goodstype=e.currentTarget.dataset.goodstype
+    list.goodsnum=e.currentTarget.dataset.goodsnum
+    var date2=e.currentTarget.dataset.goodsdate
+    var goodsstartdate=date2.split("~")[0]
+    var goodsenddate=goodsstartdate.split("-")[0]+"-"+date2.split("~")[1]
+    list.goodsstartdate=goodsstartdate
+    list.goodsenddate=goodsenddate
+    var list2=[]
+    list2.push(list)
+    console.log(list2)
     wx.navigateTo({
-      url: '../gomodify/gomodify'
+      url: '../gomodify/gomodify?list='+JSON.stringify(list2)
     })
   },
   modify_goods:function(){
