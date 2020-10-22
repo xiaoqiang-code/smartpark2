@@ -1,24 +1,92 @@
-<view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">身份证号：</view>
-		<input placeholder="请输入身份证号" disabled value="{{card}}"></input>
+<view style="width:100%;height:{{height}}px;background-color:#F1F7FF;display: inline-block;">
+  <view>
+    <input type="text" placeholder="证件号" value="{{card}}" disabled class="input_css"></input> 
   </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">姓名：</view>
-		<input placeholder="请输入姓名" disabled value="{{name}}" ></input>
+  <view>
+    <input type="text" placeholder="姓名" value="{{name}}" disabled class="input_css"></input> 
   </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">物品数量：</view>
-		<input value="1" bindinput="goodsnum"></input>
+  <view>
+    <input type="text" placeholder="物品数量" bindinput="goodsnum" class="input_css"></input> 
   </view>
-  <view class="cu-form-group">
-		<view class="title">物品类型：</view>
-		<picker bindchange="PickerChange" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
-			<view class="picker">
-				{{index?objectArray[index].name:'未选择'}}
-			</view>
-		</picker>
-	</view>
-  <view class="cu-form-group">
+  <view class="input_css" style="color:#808080;fint-size:20px;">
+    <view class="title" style="float:left;margin-top:4%;">物品类型：</view>
+    <picker bindchange="PickerChange" style="float:right;margin-right:20px;margin-top:4%;" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
+      <view class="picker">
+        {{index?objectArray[index].name:'未选择'}}
+        <text class="cuIcon-roundright lg text-gray"></text>
+      </view>
+    </picker>
+  </view>
+  <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+    <view class="action" style="width: 60px;">
+      接待人
+    </view>
+    <view style="margin-right:30rpx;width: 166px;text-align:right;">{{receivernameselect}}</view>
+    <view class="action" style="width:20%;">
+      <button class="cu-btn line-blue round " style="width:100%;" bindtap="showModal" data-target="bottomModal">选择</button>
+    </view>
+  </view>
+  <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+    <view class="title">授权起始日期</view>
+    <rui-dtpicker4 wx:if="{{time_nyrsfm}}"
+      start="2020-01-01 00:00:00"
+      end="2035-12-31 00:00:00"
+      value="{{time_nyr}} 00:00:00"
+      fields="second"
+      bindchangedatepicker="changeDate"
+      bindcanceldatepicker="cancelDate"
+      style="margin-left:30px;"
+    ></rui-dtpicker4>
+  </view>
+  <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+    <view class="title">授权结束日期</view>
+    <rui-dtpicker5 wx:if="{{time_nyrsfm}}"
+      start="2020-01-01 23:59:59" 
+      end="2035-12-31 23:59:59" 
+      value="{{time_nyr}} 23:59:59" 
+      fields="second"
+      bindchangedatepicker="changeDate"
+      bindcanceldatepicker="cancelDate"
+      style="margin-left:30px;"
+    ></rui-dtpicker5>
+  </view>
+
+  <!-- 选择接待人 -->
+  <view class="cu-modal bottom-modal {{modalName=='bottomModal'?'show':''}}">
+    <view class="cu-dialog">
+      <view class="cu-bar bg-white">
+        <view class="action text-green" bindtap="receiversure">确定</view>
+        <view class="action text-blue" bindtap="hideModal">取消</view>
+      </view>
+      <view style="width:100%;">
+        <view class="cu-bar search bg-white">
+          <view class="search-form round">
+            <text class="cuIcon-search"></text>
+            <input type="text" bindinput="bfdwss" placeholder="搜索单位名称" confirm-type="search"></input>
+          </view>
+          <view class="action">
+            <button bindtap="comsearch" class="cu-btn bg-green shadow-blur round">搜索</button>
+          </view>
+        </view>
+      </view>
+      <scroll-view scroll-y="true" scroll-with-animation="true" style="height: 500px;">
+        <radio-group class="block">
+        <view  class="cu-list menu-avatar">
+          <view wx:for="{{peoplelist}}" style="height:80rpx;" class="cu-item">
+            <view style="left:70rpx;" class="content">
+              <view class="text-grey">{{item.name}}</view>
+            </view>
+            <view class="action">
+              <radio data-id="{{item.id}}" data-index="{{index}}" data-value="{{item.name}}" bindtap="radio_receiver" class="radio"></radio>
+            </view>
+          </view>
+        </view>
+        </radio-group>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- <view class="cu-form-group">
     <view class="title">授权起始日期：</view>
     <picker mode="date" value="{{start_date}}" start="2020-01-01" end="2090-09-01" bindchange="DateChange">
       <view class="picker" value="{{start_date}}">
@@ -33,8 +101,9 @@
         {{end_date}}
       </view>
     </picker>
+  </view> -->
+  <view class="padding-xl">
+    <button bindtap="submitapply" style="background-color:#1380e2;color:white;" class="cu-btn block margin-tb-sm lg">
+      <text class="cuIcon-upload"></text> 提交申请</button>
   </view>
-<view class="padding-xl">
-  <button bindtap="submitapply" class="cu-btn block margin-tb-sm bg-gradual-blue lg">
-    <text class="cuIcon-upload"></text> 提交申请</button>
 </view>

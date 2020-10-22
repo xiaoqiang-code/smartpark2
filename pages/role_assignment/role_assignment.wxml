@@ -1,0 +1,35 @@
+<view style="width:100%;height:{{height}}px;background-color:#F1F7FF;display: inline-block;">
+  <view class="cu-bar solid-bottom" style="background-color:#F1F7FF;height:{{height*0.08}}px;">
+    <view class="action">
+    筛选：
+    </view>
+    <view class="action" style="width: 45%;">
+      <input type="text" placeholder="胸卡号、姓名、手机号" bindinput="searchtext" style="width:100%;height:30px;padding-left:5px;border: 1rpx solid #e5f2fe;border-radius: 5px;background-color:white;"></input>
+    </view>
+    <view class="search" bindtap="search">
+			<view class="cuIcon-search text-blue"></view>
+		</view>
+    <view class="action">
+      <button bindtap="addYG" class="cu-btn round sm line-blue">新增员工</button>
+    </view>
+  </view>
+  <scroll-view scroll-y="true" style="height:{{height*0.85}}px" bindscrolltolower="onReach" lower-threshold="20">
+    <view class="cu-list menu-avatar">
+      <view class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" wx:for="{{YGlist}}" wx:key bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" data-target="move-box-{{index}}" style="background-color:#F1F7FF;">
+        <view class="cu-avatar lg round" style="background-image:url('{{ygtximg}}');"></view>
+        <view class="content" style="width:100%">
+          <view class="text-grey">{{item.empName}}</view>
+          <view class="text-gray text-sm">{{item.roles}}</view>
+        </view>
+        <view class="move">
+          <view bindtap="edit" data-objuid="{{item.objuid}}" class="bg-grey">修改</view>
+          <view bindtap="delete" data-objuid="{{item.objuid}}" class="bg-red">删除</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view wx:if="{{lastpage}}" style="background-color:#F1F7FF;color:#aaaaaa;" class="cu-load over"></view>
+  <view wx:else>
+    <view wx:if="{{loading}}" style="background-color:#F1F7FF;color:#aaaaaa;" class="cu-load loading"></view>
+  </view>
+</view>

@@ -1,12 +1,16 @@
 // pages/qrcode/qrcode.js
 var app = getApp()
+var util = require('../../utils/util.js');
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    qrcodeimg:'',
+    height:'',
+    width:'',
+    left:0
   },
 
   /**
@@ -14,8 +18,18 @@ Page({
    */
   onLoad: function (options) {
     var that=this
+    var objuid=options.objuid
+    var bustype=options.bustype
+    const res = wx.getSystemInfoSync()
+    var l=(res.windowWidth-230)/2
+    var l2=(res.windowWidth-220)/2
     that.setData({
-      src:'http://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/qrcode/by/form/objuid.do?objuid=2C063DA17FEC4CED8D7CBA873ECB7133&busType=0'
+      height:res.windowHeight,
+      width:res.windowWidth,
+      qrcodeimg:util.qrcodeimg(),
+      left:l,
+      left2:l2,
+      src:app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/qrcode/by/form/objuid.do?objuid='+objuid+'&busType='+bustype
     })
   },
 
@@ -69,12 +83,10 @@ Page({
   },
   goback(){
     wx.reLaunch({
-      url: ''
+      url: '../receiveraudit/receiveraudit'
     })
   },
   goindex(){
-    wx.reLaunch({
-      url: '../index/index'
-    })
+    wx.navigateBack({})
   }
 })

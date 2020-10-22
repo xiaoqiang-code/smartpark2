@@ -1,0 +1,111 @@
+.cu-form-group .title {
+  min-width: calc(4em + 30rpx);
+}
+.border_wai{
+  width:calc(100% - 36px);
+  height:45px;
+  margin:0 auto;
+  left:18px;
+}
+.input_css {
+  border: 1px solid #e5f2fe;
+  height: 35px;
+  padding-left: 4%;
+  background-color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #808080;
+  float: left;
+  display:flex;
+  line-height:33px;
+}
+
+.jianhao {
+  width: 15px;
+  text-align: center;
+  margin-top: 10px;
+  align-items: center;
+  vertical-align: center;
+  flex-direction: row;
+  color: white;
+  float: left;
+}
+
+.search1 {
+  width:35px;
+  height: 35px;
+  border-radius: 5px;
+  border: 1px solid #e5f2fe;
+  background-color: white;
+  align-items: center;
+  vertical-align: center;
+  flex-direction: row;
+  float:right;
+  line-height:33px;
+}
+
+.item_content {
+  width: calc(100% - 36px);
+  margin: 0 auto;
+  margin-top: 20px;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.item_content_title {
+  height: 45px;
+  background: #2D9AF8;
+  border-radius: 10px 10px 0 0;
+  color: #ffffff;
+}
+.item_content_title_car {
+  background: #9081FC;
+}
+.item_content_title_goods{
+  background:#F5C167
+}
+.item_content_title_left {
+  float: left;
+  margin-left: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.item_content_title .item_content_right_button {
+  float: right;
+  margin-right: 10px;
+  border:1px white solid !important;
+  margin-top: 7px;
+}
+
+.item_info {
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  padding-bottom: 10px;
+}
+
+.item_info_left {
+  overflow-wrap: break-word;
+  width: 230px;
+  float:left;
+}
+.item_info_right{
+  position: absolute;
+  width:120px;
+  height:120px;
+  top:0px;
+  left:calc(100% - 120px);
+}
+.info_item {
+  margin-top: 5px;
+}
+
+.info_intem_label {
+  width: 65px;
+  display: inline-block;
+  color: #8b8b8b;
+}
+.cu-capsule+.cu-capsule{
+  margin-left:0px;
+}

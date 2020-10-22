@@ -12,11 +12,12 @@ Page({
     goodsnum:1,
     goodstype:'',
     goodstypeid:'',
-    start_daye:'',
-    end_date:'',
     index:0,
     objuid:'',
-    objectArray:[]
+    objectArray:[],
+    time_nyr:'',
+    time_nyrsfm:'',
+    height:''
   },
 
   /**
@@ -25,13 +26,19 @@ Page({
   onLoad: function (options) {
     var that = this
     var time = util.formatDate(new Date());
+    const res = wx.getSystemInfoSync()
     that.setData({
-      start_date:time,
-      end_date:time
+      receivernameselect:app.globalData.receptionistName,
+      receiveridselectid:app.globalData.receptionistId,
+      time_nyr:util.formatDate(new Date()),//年月日
+      time_nyrsfm:util.formatTime(new Date()),//年月日时分秒
+      height:res.windowHeight
     })
+    app.globalData.goodsstarttime='',
+    app.globalData.goodsendtime=''
     //物品类型
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
       data: {
       },
       header: {
@@ -42,12 +49,12 @@ Page({
         that.setData({
           objectArray: res.data.data,
         })
-       console.log("物品"+JSON.stringify(res))
+      //  console.log("物品"+JSON.stringify(res))
       }
     })
     //基础信息
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
       data: {
         idNumber :app.globalData.usercardid
       },
@@ -71,7 +78,24 @@ Page({
             wx.hideToast()
           }, 2000)
         }
-       console.log("____基础信息____"+JSON.stringify(res))
+      //  console.log("____基础信息____"+JSON.stringify(res))
+      }
+    })
+    //查询接待人数据
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        idNumber:app.globalData.usercardid
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        that.setData({
+          peoplelist:res.data.data
+        })
+      //  console.log("___所有接待人__"+JSON.stringify(res))
       }
     })
   },
@@ -96,6 +120,68 @@ Page({
   DateChange2(e) {
     this.setData({
       end_date: e.detail.value
+    })
+  },
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target,
+    })
+  },
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
+  radio_receiver:function(e){
+    var that=this
+    that.setData({
+      receiverid:e.currentTarget.dataset.id,
+      receivername:e.currentTarget.dataset.value
+    })
+  },
+  receiversure:function(){
+    var that=this
+    if(that.data.receiverid==null||that.data.receiverid==''){
+      wx.showToast({
+        title: '请选择接待人!',
+        icon: 'none',
+        duration: 1500
+      })
+      setTimeout(function() {
+        wx.hideToast()
+      }, 2000)
+      return
+    }
+    that.setData({
+      receivernameselect:that.data.receivername,
+      receiveridselectid:that.data.receiverid,
+      modalName: null
+    })
+  },
+  bfdwss(e){
+    this.setData({
+      bfdwss:e.detail.value
+    })
+  },
+  comsearch:function(e){
+    var that=this
+    
+    //接待人
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        name:that.data.bfdwss
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        that.setData({
+          peoplelist: res.data.data,
+        })
+      //  console.log("____搜索接待人_____"+JSON.stringify(res))
+      }
     })
   },
   /**
@@ -170,6 +256,17 @@ Page({
       }, 2000)
       return
     }
+    if (that.data.receiveridselectid.replace(/\s*/g, "") == '' || that.data.receiveridselectid == null) {
+      wx.showToast({
+        title: '请选择接待人!',
+        icon: 'none',
+        duration: 1500
+      })
+      setTimeout(function() {
+        wx.hideToast()
+      }, 2000)
+      return
+    }
     if (that.data.start_date>that.data.end_date) {
       wx.showToast({
         title: '起始日期不能大于结束日期!',
@@ -185,10 +282,22 @@ Page({
     formList.idNumber=app.globalData.usercardid
     formList.objectCount=that.data.goodsnum
     formList.objectTypeUid=that.data.objuid
-    formList.objectAuthStartDate=that.data.start_date
-    formList.objectAuthEndDate=that.data.end_date
+    
+    formList.receptionist=that.data.receiveridselectid
+
+    if(app.globalData.goodsstarttime){
+      formList.objectAuthStartDate=app.globalData.goodsstarttime
+    }else{
+      formList.objectAuthStartDate=that.data.time_nyr+" 00:00:00"
+    }
+    if(app.globalData.goodsendtime){
+      formList.objectAuthEndDate=app.globalData.goodsendtime
+    }else{
+      formList.objectAuthEndDate=that.data.time_nyr+" 23:59:59"
+    }
+
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/object/apply/create.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/object/apply/create.do',
       data: {
         formList:JSON.stringify(formList)
       },
@@ -205,8 +314,10 @@ Page({
           })
           setTimeout(function() {
             wx.hideToast()
+            app.globalData.goodsstarttime='',
+            app.globalData.goodsendtime=''
             wx.reLaunch({
-              url: '../index/index'
+              url: '../index/index?miao=2'
             })
           }, 2000)
           
@@ -221,7 +332,7 @@ Page({
             wx.hideToast()
           }, 5000)
         }
-       console.log("_____物品申请______"+JSON.stringify(res))
+      //  console.log("_____物品申请______"+JSON.stringify(res))
       }
     })
   }

@@ -1,62 +1,124 @@
-<view class="bg-img padding-tb-xl" style="background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599380984946&di=aefdbef67b1011d00302202a72e70409&imgtype=0&src=http%3A%2F%2Fa1.att.hudong.com%2F78%2F09%2F19300542185912149915095568748.jpg');height: 414rpx;">
+<view wx:if="{{login}}" class="bgclass"
+  style="width:100%;height:{{height}}px;background-image:url('{{bgimg}}');background-size:100% 100%;">
+  <view style="width:100%;height:{{height}}px;padding-top: {{height*0.33}}px;">
+    <scroll-view scroll-y="true" style="height:{{height*0.6}}px;">
+      <view wx:for="{{menulist}}" class="button {{index%2==0?'bianju_jishu':'bianju_oushu'}}">
+        <view class=" button_view">
+          <view class="list_height" bindtap="peopleapply" data-flag="1" wx:if="{{menulist[index]=='临时身份卡申请'}}">
+            <image class="img" style="background-image:url('{{wlryimg}}');"></image>
+            <view class="text_center"><text class="text_size">临时身份卡</text></view>
+            <view class="text_center"><text class="list_fontsize">申请</text></view>
+          </view>
+          <view class="list_height" bindtap="carapply" data-flag="2" wx:if="{{menulist[index]=='临时车辆申请'}}">
+            <image class="img" style="background-image:url('{{lsclimg}}');"></image>
+            <view class="text_center"><text class="text_size">临时车辆</text></view>
+            <view class="text_center"><text class="list_fontsize">申请</text></view>
+          </view>
+          <view class="list_height" bindtap="goodsapply" data-flag="3" wx:if="{{menulist[index]=='(限制)物品申请'}}">
+            <image class="img" style="background-image:url('{{xdwpimg}}');"></image>
+            <view class="text_center"><text class="text_size">(限制)物品</text></view>
+            <view class="text_center"><text class="list_fontsize">申请</text></view>
+          </view>
+          <view class="list_height" bindtap="goreceiveraudit" data-flag="4" wx:if="{{menulist[index]=='接待信息审核'}}">
+            <image class="img" style="background-image:url('{{jdxxshimg}}');"></image>
+            <view class="text_center"><text class="text_size">接待信息</text></view>
+            <view class="text_center"><text class="list_fontsize">审核</text></view>
+          </view>
+          <view class="list_height" bindtap="approver" data-flag="5" wx:if="{{menulist[index]=='接待信息审批'}}">
+            <image class="img" style="background-image:url('{{jdxxspimg}}');"></image>
+            <view class="text_center"><text class="text_size">接待信息</text></view>
+            <view class="text_center"><text class="list_fontsize">审批</text></view>
+          </view>
+          <view class="list_height" bindtap="goHandleCode" data-flag="6" wx:if="{{menulist[index]=='办理进度查询'}}">
+            <image class="img" style="background-image:url('{{jdcxbgimg}}');"></image>
+            <view class="text_center"><text class="text_size">办理进度</text></view>
+            <view class="text_center"><text class="list_fontsize">查询</text></view>
+          </view>
+          <view class="list_height" bindtap="jiedaihistory" data-flag="7" wx:if="{{menulist[index]=='接待历史查询'}}">
+            <image class="img" style="background-image:url('{{jdlsimg}}');"></image>
+            <view class="text_center"><text class="text_size">接待历史</text></view>
+            <view class="text_center"><text class="list_fontsize">查询</text></view>
+          </view>
+          <view class="list_height" bindtap="govisahistory" data-flag="8" wx:if="{{menulist[index]=='审批历史查询'}}">
+            <image class="img" style="background-image:url('{{splscximg}}');"></image>
+            <view class="text_center"><text class="text_size">审批历史</text></view>
+            <view class="text_center"><text class="list_fontsize">查询</text></view>
+          </view>
+          <view class="list_height" bindtap="authoritymanagement" data-flag="9" wx:if="{{menulist[index]=='角色权限管理'}}">
+            <image class="img" style="background-image:url('{{jsglimg}}');"></image>
+            <view class="text_center"><text class="text_size">角色权限</text></view>
+            <view class="text_center"><text class="list_fontsize">管理</text></view>
+          </view>
+          <view class="list_height" bindtap="roleassignment" data-flag="10" wx:if="{{menulist[index]=='人员角色分配'}}">
+            <image class="img" style="background-image:url('{{jsfpimg}}');"></image>
+            <view class="text_center"><text class="text_size">人员角色</text></view>
+            <view class="text_center"><text class="list_fontsize">分配</text></view>
+          </view>
+          <view class="list_height" bindtap="history" data-flag="11" wx:if="{{menulist[index]=='历史查询(管理端)'}}">
+            <image class="img" style="background-image:url('{{jdlsimg}}');"></image>
+            <view class="text_center"><text class="text_size">入厂记录</text></view>
+            <view class="text_center"><text class="list_fontsize">查询</text></view>
+          </view>
+          <view class="list_height" bindtap="myinf" data-flag="12" wx:if="{{menulist[index]=='我的信息'}}">
+            <image class="img" style="background-image:url('{{myimg}}');"></image>
+            <view class="text_center"><text class="text_size">个人信息</text></view>
+            <view class="text_center"><text class="list_fontsize">查看</text></view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view style="width:100%;text-align:center;">
+      <text style="color:#e5efff;">沈飞集团访客入厂申请系统</text>
+    </view>
+  </view>
 </view>
-<view wx:if="{{login}}">
-  <scroll-view scroll-y="true" style="height:400px;">
-  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
-      <view class="action" bindtap="peopleapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        外来人员入场申请
+<view wx:else class="bgclass"
+  style="width:100%;height:{{height}}px;background-image:url('{{loginbgimg}}');background-size:100% 100%;">
+  <view style="width:94%;margin-top: 80px;">
+    <view class="myview">
+      <view class="cu-form-group login_input" >
+        <view class="title" style="font-size:18px;">证件号：</view>
+        <input style="font-size:18px;" placeholder="胸卡号或证件号" bindinput="card"></input>
+      </view>
+      <view class="cu-form-group login_input">
+        <view class="title" style="font-size:18px;">手机号：</view>
+        <input style="font-size:18px;" placeholder="手机号" bindinput="sjh"></input>
+      </view>
+      <view class="cu-form-group login_input">
+        <view class="title" style="font-size:18px;">验证码：</view>
+        <input style="font-size:18px;" placeholder="验证码" bindinput="yzm"></input>
+        <button bindtap="hqyam" wx:if="{{yzmflag==1}}" class="cu-btn round line-blue">获取验证码</button>
+        <button disabled="disabled" class="cu-btn round line-blue" wx:if="{{yzmflag==2}}">
+          {{yzmdjs}}秒后重试
+        </button>
+      </view>
+      <view class="cu-form-group login_input">
+      </view>
+      <view class="padding flex flex-direction">
+        <button class="cu-btn lg" style="height:45px;background-color:#1380e2;color:#F1F7FF;font-size:18px;"
+          bindtap="login">登录</button>
       </view>
     </view>
-  </view>
-  
-  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
-      <view class="action" bindtap="carapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        临时车辆入场申请
-      </view>
-    </view>
-  </view>
-  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
-      <view class="action" bindtap="goodsapply" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        (限制)物品携带入场申请
-      </view>
-    </view>
-  </view>
-  <view wx:if="{{flag==0}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
-      <view class="action" bindtap="goHandleCode" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        办理进度(二维码)查询
-      </view>
-    </view>
-  </view>
-  <view wx:if="{{flag==2}}" class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" >
-      <view class="action" bindtap="goVisa" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        入场签证审批
-      </view>
-    </view>
-  </view> 
-  <!-- <view class="text-center" style="padding-top: 20rpx; padding-left: 100rpx; padding-right: 100rpx;padding-bottom: 20rpx; ">
-    <view class=" radius shadow-lg margin-top" style="margin-top:10px;height: 50px;background-color: #6393e5;" bindtap="go_detail">
-      <view class="action" bindtap="Myinformation" style="color:white;padding-top: 20rpx;font-size: 18px;">
-        我的信息
-      </view>
-    </view>
-  </view> -->
-</scroll-view>
-</view>
-<view wx:else>
-<view class="myview">
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">证件号：</view>
-		<input placeholder="胸卡号或身份证号" bindinput="card"></input>
-  </view>
-  <view class="padding flex flex-direction">
-    <button class="cu-btn bg-grey2 lg" bindtap="login">登录</button>
   </view>
 </view>
-</view>
- 
 
+<!-- 使用须知 -->
+<view class="cu-modal {{modalName=='Modal'?'show':''}}">
+  <view class="cu-dialog alert_full">
+    <view class='alert_top_occupy'></view>
+    <view class='alert_content_bg' style="background-image:url('{{tsbgimg}}');">
+      <view class='alert_content_top' style="background-image:url('{{tsbtimg}}');"></view>
+      <!-- <view class='alert_content_close' style="background-image:url('../../images/close.png');"></view> -->
+      <view class="padding-xl">
+        <view class='alert_content_title'>使用需知</view>
+        <view style='margin-top:50px;'></view>
+        <view class='alert_content_text'>1、内部员工请使用胸卡号登录。</view>
+        <view class='alert_content_text'>2、访客请使用自己的身份证号登录。</view>
+        <view class='alert_content_text'>3、当前系统支持短期身份卡申请、临时车辆入厂申请、携带(限制)物品入厂申请，其他功能敬请期待！</view>
+        <button bindtap="hideModal"
+          style="width:100px;height:50px;background-color:#1988E7;color:white;margin-top:50rpx;font-size:18px;"
+          class="cu-btn round">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

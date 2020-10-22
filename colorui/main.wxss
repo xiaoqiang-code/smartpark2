@@ -18,6 +18,7 @@ page {
 	--yellow: #fbbd08;
 	--olive: #8dc63f;
 	--green: #39b54a;
+	--green2: #5aa826;
 	--cyan: #1cbbb4;
 	--blue: #0081ff;
 	--purple: #6739b6;
@@ -28,9 +29,11 @@ page {
 	--grey2: #6393e5;
 	--black: #333333;
 	--darkGray: #666666;
+	--hui: #dadada;
 	--gray: #aaaaaa;
 	--ghostWhite: #f1f1f1;
 	--white: #ffffff;
+	--blue2:#1380e2;
 	/* 浅色 */
 	--redLight: #fadbd9;
 	--orangeLight: #fde6d2;
@@ -634,7 +637,10 @@ radio.white[checked] .wx-radio-input {
 	position: relative;
 	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
 }
-
+.shadow-warp2 {
+	position: relative;
+	box-shadow: 0 0 10rpx rgba(29, 153, 255, 1);
+}
 .shadow-warp:before,
 .shadow-warp:after {
 	position: absolute;
@@ -3457,7 +3463,10 @@ scroll-view.cu-steps .cu-item {
 	background-color: var(--green);
 	color: var(--white);
 }
-
+.bg-green2 {
+	background-color: var(--green2);
+	color: var(--white);
+}
 .bg-cyan {
 	background-color: var(--cyan);
 	color: var(--white);
@@ -3467,7 +3476,14 @@ scroll-view.cu-steps .cu-item {
 	background-color: var(--blue);
 	color: var(--white);
 }
-
+.bg-blue2 {
+	background-color: var(--blue2);
+	color: var(--white);
+}
+.bg-hui {
+	background-color: var(--hui);
+	color: var(--white);
+}
 .bg-purple {
 	background-color: var(--purple);
 	color: var(--white);

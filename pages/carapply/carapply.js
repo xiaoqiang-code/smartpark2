@@ -9,13 +9,16 @@ Page({
   data: {
     card:'',
     name:'',
-    start_date:'',
     carnum:'',
     goodsnum:'',
     cardtype:'',
     index:0,
     objuid:'',
     objectArray: [], 
+    peoplelist:[],
+    height:'',
+    time_nyr:'',
+
 
     switchovercarid:'切换新能源车牌',
     switchovercartext:'changeplate',
@@ -45,9 +48,12 @@ Page({
   onLoad: function (options) {
     var that = this
     var time = util.formatDate(new Date());
+    const res = wx.getSystemInfoSync()
+    var height=res.windowHeight
+    app.globalData.cartime='',
     //基础信息
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
       data: {
         idNumber :app.globalData.usercardid
       },
@@ -71,12 +77,12 @@ Page({
             wx.hideToast()
           }, 2000)
         }
-       console.log("____基础信息____"+JSON.stringify(res))
+      //  console.log("____基础信息____"+JSON.stringify(res))
       }
     })
     //车辆类型
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
       data: {
       },
       header: {
@@ -87,16 +93,31 @@ Page({
         that.setData({
           objectArray: res.data.data,
         })
-       console.log("____车辆类型______"+JSON.stringify(res))
+      //  console.log("____车辆类型______"+JSON.stringify(res))
+      }
+    })
+    //查询接待人数据
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        idNumber:app.globalData.usercardid
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        that.setData({
+          peoplelist:res.data.data
+        })
+      //  console.log("___所有接待人__"+JSON.stringify(res))
       }
     })
     that.setData({
-      start_date:time
-    })
-  },
-  DateChange(e) {
-    this.setData({
-      start_date: e.detail.value
+      height:height,
+      time_nyr:time,
+      receivernameselect:app.globalData.receptionistName,
+      receiveridselectid:app.globalData.receptionistId,
     })
   },
   PickerChange(e) {
@@ -106,12 +127,51 @@ Page({
       objuid:that.data.objectArray[e.detail.value].id,
       cardtype:that.data.objectArray[e.detail.value].name
     })
+    // console.log("__wee:_____"+that.data.objectArray[e.detail.value].id)
   },
   carnum(e){
     this.setData({
       carnum:e.detail.value
     })
   },
+
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target,
+    })
+  },
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
+  radio_receiver:function(e){
+    var that=this
+    that.setData({
+      receiverid:e.currentTarget.dataset.id,
+      receivername:e.currentTarget.dataset.value
+    })
+  },
+  receiversure:function(){
+    var that=this
+    if(that.data.receiverid==null||that.data.receiverid==''){
+      wx.showToast({
+        title: '请选择接待人!',
+        icon: 'none',
+        duration: 1500
+      })
+      setTimeout(function() {
+        wx.hideToast()
+      }, 2000)
+      return
+    }
+    that.setData({
+      receivernameselect:that.data.receivername,
+      receiveridselectid:that.data.receiverid,
+      modalName: null
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -160,9 +220,36 @@ Page({
   onShareAppMessage: function () {
 
   },
+  bfdwss(e){
+    this.setData({
+      bfdwss:e.detail.value
+    })
+  },
+  comsearch:function(e){
+    var that=this
+    
+    //接待人
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        name:that.data.bfdwss
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        that.setData({
+          peoplelist: res.data.data,
+        })
+       console.log("____搜索接待人_____"+JSON.stringify(res))
+      }
+    })
+  },
+  //提交
   submitapply:function(){
     var that=this
-    console.log("*&*^*&"+that.data.card)
+    // console.log("*&*^*&"+that.data.card)
     if (that.data.carnum.replace(/\s*/g, "") == '' || that.data.carnum == null) {
       wx.showToast({
         title: '车牌号不得为空!',
@@ -212,14 +299,32 @@ Page({
       }, 2000)
       return
     }
-return
+    if (that.data.receiveridselectid.replace(/\s*/g, "") == '' || that.data.receiveridselectid == null) {
+      wx.showToast({
+        title: '请选择接待人!',
+        icon: 'none',
+        duration: 1500
+      })
+      setTimeout(function() {
+        wx.hideToast()
+      }, 2000)
+      return
+    }
     var formList = {};
     formList.idNumber=app.globalData.usercardid
     formList.plateNumber=that.data.carnum
     formList.carTypeUid=that.data.objuid
     formList.carAuthDate=that.data.start_date
+    formList.receptionist=that.data.receiveridselectid
+
+
+    if(!app.globalData.cartime){
+      formList.carAuthDate=that.data.time_nyr
+    }else{
+      formList.carAuthDate=app.globalData.cartime
+    }
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/car/apply/create.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/car/apply/create.do',
       data: {
         formList:JSON.stringify(formList)
       },
@@ -236,8 +341,9 @@ return
           })
           setTimeout(function() {
             wx.hideToast()
+            app.globalData.cartime=''
             wx.reLaunch({
-              url: '../index/index'
+              url: '../index/index?miao=2'
             })
           }, 2000)
           
@@ -252,7 +358,7 @@ return
             wx.hideToast()
           }, 5000)
         }
-       console.log("_____临时车辆申请______"+JSON.stringify(res))
+      //  console.log("_____临时车辆申请______"+JSON.stringify(res))
       }
     })
 
@@ -305,7 +411,7 @@ return
   //打开输入法
   inputClick:function(t){
     var that = this;
-    console.log('输入框:', t)
+    // console.log('输入框:', t)
     that.setData({
       inputOnFocusIndex : t.target.dataset.id,
       isKeyboard: !0
@@ -327,7 +433,7 @@ return
   tapKeyboard: function (t) {
     t.target.dataset.index;
     var a = t.target.dataset.val;
-    console.log('键盘:',a)
+    // console.log('键盘:',a)
     switch (this.data.inputOnFocusIndex) {
       case "0":
         this.setData({
@@ -386,7 +492,7 @@ return
  
     }
     var n = this.data.inputPlates.index0 + this.data.inputPlates.index1 + this.data.inputPlates.index2 + this.data.inputPlates.index3 + this.data.inputPlates.index4 + this.data.inputPlates.index5 + this.data.inputPlates.index6 + this.data.inputPlates.index7
-    console.log('车牌号:',n)
+    // console.log('车牌号:',n)
     this.setData({
       carnum:n
     })

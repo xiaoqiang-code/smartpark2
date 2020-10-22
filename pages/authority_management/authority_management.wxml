@@ -1,0 +1,36 @@
+<view style="width:100%;height:{{height}}px;background-color:#1380e2;display: inline-block;">
+  <scroll-view scroll-y="true" style="height:{{height*0.85}}px;">
+    <view class="border_wai" wx:for="{{JSList}}">
+      <view class="border_wai_view">
+      <view class="title">{{item.roleName}}</view>
+      </view>
+      <view class="white_bg">
+        <button class="cu-btn round line-blue watch" bindtap="watch" data-roledesc="{{item.roleDesc}}" data-rolename="{{item.roleName}}" data-objuid="{{item.objuid}}"><text class="cuIcon-attention"></text>查看</button>
+        <button class="cu-btn round line-green edit" data-roledesc="{{item.roleDesc}}" data-rolename="{{item.roleName}}" data-objuid="{{item.objuid}}" bindtap="edit"><text class="cuIcon-edit"></text>编辑</button>
+        <button class="cu-btn round line-red edit" data-objuid="{{item.objuid}}" bindtap="delete"><text class="cuIcon-delete"></text>删除</button>
+      </view>
+    </view>
+  </scroll-view>
+  <button bindtap="add" class="cu-btn icon add" style="width: 80rpx;height: 80rpx;">
+    <text class="cuIcon-add"></text>
+  </button>
+</view>
+
+<view class="cu-modal {{modalNameCK=='DialogModal'?'show':''}}">
+	<view class="cu-dialog" style="margin-top: -200px;border-radius: 12px 12px 12px 12px;">
+		<view class="cu-bar justify-end" style="background-image:url('{{titleimg}}');background-size:100% 100%;">
+      <view class="content" style="color:white;font-size:18px;">角色信息</view>
+      <view class="action" bindtap="hideModalCK">
+				<text class="cuIcon-close text-white"></text>
+			</view>
+		</view>
+		<view style="height:300px;text-align:left;padding-left:15px;padding-right:15px;padding-top:15px;font-size: 16px;">
+			<view style="color:#8b8b8b;line-height: 50px;" class="solids-bottom">角色名称:<text style="color:#1380e2;">{{roleName}}</text></view>
+      <view style="color:#8b8b8b;line-height: 50px;" class="solids-bottom">角色描述:<text style="color:#1380e2;">{{roleDesc}}</text></view>
+      <view style="color:#8b8b8b;line-height: 30px;">角色菜单:</view>
+      <view>
+          <view wx:for="{{menus}}" wx:if="{{item.bgColor}}" style="margin-top:5px;" class="cu-tag line-blue">{{item.menuName}}</view>
+      </view>
+		</view>
+	</view>
+</view>

@@ -13,21 +13,13 @@ Page({
     phonenum:'',
     company2:'',
     cause:'',
-    companyselect:'',
-    companyid:'',
-    companyselectid:'',
     cardnum:'',
-    goodsnum:'',
+    goodsnum:1,
     cardtype:'',
     goodstype:'',
     scrolllocation:0,
-    carbgcolor:'#6393e5',
-    goodsbgcolor:'#6393e5',
-    start_date: '2000-01-01',
-    end_date: '2000-01-01',
-    start_date2: '2000-01-01',
-    goods_start_date:'',
-    goods_end_date:'',
+    carbgcolor:'#1380e2',
+    goodsbgcolor:'#1380e2',
     index:0,
     index2:0,
     objuid:'',
@@ -38,9 +30,14 @@ Page({
     automobiletext:'添加车辆',
     goods:false,
     goodstext:'添加(限制)物品',
-    objectArray: [],
-    objectArray2: [],
-    unitlist: [], 
+    receiveridselectid:'',
+    objectArray: [],//车辆类型信息
+    objectArray2: [],//物品类型信息
+    peoplelist:[],//接待人信息
+    height:0,
+    time_nyr:'',
+    time_nyrsfm:'',
+
 
     switchovercarid:'切换新能源车牌',
     switchovercartext:'changeplate',
@@ -69,10 +66,24 @@ Page({
    */
   onLoad: function (options) {
     var that = this
-    var time = util.formatDate(new Date());
+    const res = wx.getSystemInfoSync()
+    that.setData({
+      height:res.windowHeight,
+      receivernameselect:app.globalData.receptionistName,
+      receiveridselectid:app.globalData.receptionistId,
+      time_nyr:util.formatDate(new Date()),//年月日
+      time_nyrsfm:util.formatTime(new Date())//年月日时分秒
+    })
+    //时间初始值
+    app.globalData.peoplestarttime='',
+    app.globalData.peopleendtime='',
+    app.globalData.cartime='',
+    app.globalData.goodsstarttime='',
+    app.globalData.goodsendtime=''
+
     //车辆类型
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
       data: {
       },
       header: {
@@ -83,12 +94,12 @@ Page({
         that.setData({
           objectArray: res.data.data,
         })
-       console.log(JSON.stringify(res))
+      //  console.log("_____车辆类型_____"+JSON.stringify(res))
       }
     })
     //物品类型
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
       data: {
       },
       header: {
@@ -99,13 +110,14 @@ Page({
         that.setData({
           objectArray2: res.data.data,
         })
-       console.log("物品"+JSON.stringify(res))
+      //  console.log("_____物品类型_____"+JSON.stringify(res))
       }
     })
-    //拜访单位
+    //查询接待人数据
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/dept/list.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
       data: {
+        idNumber:app.globalData.usercardid
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded' 
@@ -113,14 +125,14 @@ Page({
       method: 'POST',
       success(res) {
         that.setData({
-          unitlist: res.data.data,
+          peoplelist:res.data.data
         })
-       console.log("####"+JSON.stringify(res))
+      //  console.log("___所有接待人__"+JSON.stringify(res))
       }
     })
     //基础信息
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
       data: {
         idNumber :app.globalData.usercardid
       },
@@ -147,40 +159,8 @@ Page({
             wx.hideToast()
           }, 2000)
         }
-       console.log("*****"+JSON.stringify(res))
+      //  console.log("____基础信息_____"+JSON.stringify(res))
       }
-    })
-    that.setData({
-      start_date: time,
-      end_date: time,
-      start_date2:time,
-      goods_start_date:time,
-      goods_end_date:time
-    })
-  },
-  DateChange(e) {
-    this.setData({
-      start_date: e.detail.value
-    })
-  },
-  DateChange2(e) {
-    this.setData({
-      end_date: e.detail.value
-    })
-  },
-  DateChange3(e) {
-    this.setData({
-      start_date2: e.detail.value
-    })
-  },
-  goodsDateChange(e){
-    this.setData({
-      goods_start_date: e.detail.value
-    })
-  },
-  goodsDateChange2(e){
-    this.setData({
-      goods_end_date: e.detail.value
     })
   },
   showModal(e) {
@@ -193,6 +173,18 @@ Page({
     this.setData({
       display:true,
       modalName: null
+    })
+  },
+  showModalreceiver(e) {
+    this.setData({
+      modalNamereceiver: e.currentTarget.dataset.target,
+      display:false
+    })
+  },
+  hideModalreceiver(e) {
+    this.setData({
+      display:true,
+      modalNamereceiver: null
     })
   },
   PickerChange(e) {
@@ -302,7 +294,7 @@ Page({
         scrolllocation:0,
         automobiletext:'添加车辆',
         automobile:false,
-        carbgcolor:'#6393e5'
+        carbgcolor:'#1380e2'
       })
     }else{
 
@@ -321,7 +313,7 @@ Page({
         scrolllocation:0,
         goodstext:'添加(限制)物品',
         goods:false,
-        goodsbgcolor:'#6393e5'
+        goodsbgcolor:'#1380e2'
       })
     }else{
       that.setData({
@@ -332,11 +324,31 @@ Page({
       })
     }
   },
-  companysure:function(){
+  // companysure:function(){
+  //   var that=this
+  //   if(that.data.companyid==null||that.data.companyid==''){
+  //     wx.showToast({
+  //       title: '请选择拜访单位!',
+  //       icon: 'none',
+  //       duration: 1500
+  //     })
+  //     setTimeout(function() {
+  //       wx.hideToast()
+  //     }, 2000)
+  //     return
+  //   }
+  //   that.setData({
+  //     companyselect:that.data.company,
+  //     companyselectid:that.data.companyid,
+  //     modalName: null,
+  //     display:true
+  //   })
+  // },
+  receiversure:function(){
     var that=this
-    if(that.data.companyid==null||that.data.companyid==''){
+    if(that.data.receiverid==null||that.data.receiverid==''){
       wx.showToast({
-        title: '请选择拜访单位!',
+        title: '请选择接待人!',
         icon: 'none',
         duration: 1500
       })
@@ -346,17 +358,24 @@ Page({
       return
     }
     that.setData({
-      companyselect:that.data.company,
-      companyselectid:that.data.companyid,
-      modalName: null,
+      receivernameselect:that.data.receivername,
+      receiveridselectid:that.data.receiverid,
+      modalNamereceiver: null,
       display:true
     })
   },
-  radio_select:function(e){
+  // radio_select:function(e){
+  //   var that=this
+  //   that.setData({
+  //     companyid:e.currentTarget.dataset.id,
+  //     company:e.currentTarget.dataset.value
+  //   })
+  // },
+  radio_receiver:function(e){
     var that=this
     that.setData({
-      companyid:e.currentTarget.dataset.id,
-      company:e.currentTarget.dataset.value
+      receiverid:e.currentTarget.dataset.id,
+      receivername:e.currentTarget.dataset.value
     })
   },
   cardnum:function(e){
@@ -376,14 +395,14 @@ Page({
       bfdwss:e.detail.value
     })
   },
+  //接待人搜索
   comsearch:function(e){
     var that=this
-    
-    //拜访单位
+    //接待人
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/dept/list.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
       data: {
-        deptName:that.data.bfdwss
+        name:that.data.bfdwss
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded' 
@@ -391,15 +410,14 @@ Page({
       method: 'POST',
       success(res) {
         that.setData({
-          unitlist: res.data.data,
+          peoplelist: res.data.data,
         })
-       console.log("##拜访单位搜索列表##"+JSON.stringify(res))
+      //  console.log("____搜索接待人_____"+JSON.stringify(res))
       }
     })
   },
   submitapply:function(){
     var that=this
-    console.log(999888777)
     if (that.data.name.replace(/\s*/g, "") == '' || that.data.name == null) {
       wx.showToast({
         title: '姓名不得为空!',
@@ -444,9 +462,9 @@ Page({
       }, 2000)
       return
     }
-    if (that.data.companyselect.replace(/\s*/g, "") == '' || that.data.companyselect == null) {
+    if (that.data.receiveridselectid.replace(/\s*/g, "") == '' || that.data.receiveridselectid == null) {
       wx.showToast({
-        title: '请选择拜访单位!',
+        title: '请选择接待人',
         icon: 'none',
         duration: 1500
       })
@@ -518,7 +536,7 @@ Page({
         }, 2000)
         return
       }
-      if (that.data.goodsnum.replace(/\s*/g, "") == '' || that.data.goodsnum == null) {
+      if (that.data.goodsnum == null) {
         wx.showToast({
           title: '(限制)物品数量不得为空!',
           icon: 'none',
@@ -531,39 +549,55 @@ Page({
       }
     }
     var formlist={}
-    
     formlist.idNumber=that.data.card
     formlist.name=that.data.name
     formlist.businessName=that.data.duty
     formlist.phoneNumber=that.data.phonenum
-    formlist.personAuthStartDate=that.data.start_date
-    formlist.personAuthEndDate=that.data.end_date
+    if(!app.globalData.peoplestarttime){
+      
+      formlist.personAuthStartDate=that.data.time_nyr+" 00:00:00"
+    }else{
+      formlist.personAuthStartDate=app.globalData.peoplestarttime
+    }
+    if(!app.globalData.peopleendtime){
+      formlist.personAuthEndDate=that.data.time_nyr+" 23:59:59"
+    }else{
+      formlist.personAuthEndDate=app.globalData.peopleendtime
+    }
     formlist.companyName=that.data.company2
-    formlist.managerDeptUid=that.data.companyselectid
+    //接待人id
+    formlist.receptionist=that.data.receiveridselectid
     formlist.reasonForVisiting=that.data.cause
     if(that.data.automobile){
       var carInfo = {};
       carInfo.plateNumber=that.data.cardnum
       carInfo.carTypeUid=that.data.objuid
-      carInfo.carAuthDate=that.data.start_date2
+      if(!app.globalData.cartime){
+        carInfo.carAuthDate=that.data.time_nyr
+      }else{
+        
+        carInfo.carAuthDate=app.globalData.cartime
+      }
       formlist.carInfo = carInfo;
-      console.log(formlist)
-    }else{
-      
     }
     if(that.data.goods){
       var objectInfo = {};
       objectInfo.objectTypeUid=that.data.objuid2
       objectInfo.objectCount=that.data.goodsnum
-      objectInfo.objectAuthStartDate=that.data.goods_start_date
-      objectInfo.objectAuthEndDate=that.data.goods_start_date
+      if(app.globalData.goodsstarttime){
+        objectInfo.objectAuthStartDate=app.globalData.goodsstarttime
+      }else{
+        objectInfo.objectAuthStartDate=that.data.time_nyr+" 00:00:00"
+      }
+      if(app.globalData.goodsendtime){
+        objectInfo.objectAuthEndDate=app.globalData.goodsendtime
+      }else{
+        objectInfo.objectAuthEndDate=that.data.time_nyr+" 23:59:59"
+      }
       formlist.objectInfo=objectInfo
-    }else{
-      
     }
-    
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/create.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/create.do',
       data: {
         formList:JSON.stringify(formlist)
       },
@@ -580,6 +614,14 @@ Page({
           })
           setTimeout(function() {
             wx.hideToast()
+            app.globalData.peoplestarttime='',
+            app.globalData.peopleendtime='',
+            app.globalData.cartime='',
+            app.globalData.goodsstarttime='',
+            app.globalData.goodsendtime=''
+            wx.reLaunch({
+              url: '../index/index?miao=2'
+            })
           }, 2000)
         }
         if(res.data.status==500){
@@ -592,15 +634,13 @@ Page({
             wx.hideToast()
           }, 2000)
         }
-       console.log(JSON.stringify(res))
+      //  console.log(JSON.stringify(res))
       }
     })
   },
 
 
   //车牌号输入法
-
-
   //切换车牌
   changeplate:function(){
     var that = this;
@@ -646,7 +686,6 @@ Page({
   //打开输入法
   inputClick:function(t){
     var that = this;
-    console.log('输入框:', t)
     that.setData({
       inputOnFocusIndex : t.target.dataset.id,
       isKeyboard: !0
@@ -668,7 +707,6 @@ Page({
   tapKeyboard: function (t) {
     t.target.dataset.index;
     var a = t.target.dataset.val;
-    console.log('键盘:',a)
     switch (this.data.inputOnFocusIndex) {
       case "0":
         this.setData({
@@ -727,7 +765,6 @@ Page({
  
     }
     var n = this.data.inputPlates.index0 + this.data.inputPlates.index1 + this.data.inputPlates.index2 + this.data.inputPlates.index3 + this.data.inputPlates.index4 + this.data.inputPlates.index5 + this.data.inputPlates.index6 + this.data.inputPlates.index7
-    console.log('车牌号:',n)
     this.setData({
       cardnum:n
     })

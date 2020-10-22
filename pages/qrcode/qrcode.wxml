@@ -1,10 +1,11 @@
-<view class="bg-img padding-tb-xl" style="background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599380984946&di=aefdbef67b1011d00302202a72e70409&imgtype=0&src=http%3A%2F%2Fa1.att.hudong.com%2F78%2F09%2F19300542185912149915095568748.jpg');height: 414rpx;">
-</view>
-
-<view style="text-align:center;margin-top:130rpx;">
-  <image style=" background-color: #eeeeee;border:1px solid #6393e5;"  src="{{src}}"></image>
-</view>
-<view style="margin-top:80rpx;">
-  <button style="width:30%;margin-left:15%;" class="cu-btn line-blue round " bindtap="goback" data-target="bottomModal">返回</button>
-  <button style="width:30%;margin-left:10%;" class="cu-btn line-blue round " bindtap="goindex" data-target="bottomModal">首页</button>
+<view style="width:100%;height:{{height}}px;background-image:url('{{qrcodeimg}}');background-size:100% 100%;display: inline-block;">
+  <view style="width:100%;text-align:center;margin-top:{{height*0.03}}px;font-size:22px;color:white;">入厂扫描二维码</view>
+  <view style=" margin-top:{{height*0.07}}px;margin-left:{{left}}px;width:230px;height:230px;background-color:white;display: flex;align-items: center;vertical-align: center;flex-direction:row;">
+    <image style="margin-left:5px;width:220px;height:220px;" src="{{src}}">
+    </image>
+  </view>
+  <view style="width:100%;text-align:center;margin-top:50px;">
+    <button class="cu-btn round lg bg-white" bindtap="goindex" style="color:#53BBF1;">点击返回</button>
+  </view>
+  
 </view>

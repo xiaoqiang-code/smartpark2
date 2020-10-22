@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText":"审批历史查询",
+  "enablePullDownRefresh":true,
+  "backgroundColor": "#1380e2"
+}

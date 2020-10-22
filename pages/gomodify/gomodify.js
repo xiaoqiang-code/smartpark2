@@ -1,5 +1,5 @@
 // pages/peopleapply/peopleapply.js
-var app = getApp()
+var app = getApp();
 var util = require('../../utils/util.js');
 Page({
 
@@ -11,25 +11,27 @@ Page({
     name:'',
     duty:'',
     phonenum:'',
-    company2:'',
+    companyname:'',
     cause:'',
     companyselect:'',
     companyid:'',
     companyselectid:'',
-    cardnum:'',
+    carnum:'',
     goodsnum:'',
-    cardtype:'',
+    cartype:'',
     goodstype:'',
     scrolllocation:0,
-    start_date: '2000-01-01',
-    end_date: '2000-01-01',
-    start_date2: '2000-01-01',
-    goods_start_date:'',
-    goods_end_date:'',
+
+    peopleStartDate: '',
+    peopleEndDate: '',
+    cardate:'',
+    goodsStartDate:'',
+    goodsEndDate:'',
+
     index:0,
     index2:0,
-    objuid:'',
-    objuid2:'',
+    carobjuid:'',
+    goodsobjuid:'',
     automobile:false,
     display:true,
     automobiletext:'添加车辆',
@@ -37,11 +39,13 @@ Page({
     goodstext:'添加(限制)物品',
     objectArray: [],
     objectArray2: [],
-    unitlist: [], 
     reason:'',
-    carbgcolor:'#6393e5',
-    goodsbgcolor:'#6393e5',
-    objuid3:'',
+    carbgcolor:'#1380e2',
+    goodsbgcolor:'#1380e2',
+    dataobjuid:'',
+    height:'',
+    jichushuju:{},
+    receiveridselectid:'',
 
 
     switchovercarid:'切换新能源车牌',
@@ -71,45 +75,165 @@ Page({
    */
   onLoad: function (options) {
     var that = this
-    var time = util.formatDate(new Date());
-    var list=JSON.parse(options.list);
+    const res = wx.getSystemInfoSync()
     that.setData({
       card:app.globalData.usercardid,
-      name:list[0].name,
-      start_date:list[0].startdate,
-      end_date:list[0].enddate,
-      company2:list[0].company,
-      //companyselect:list[0].dw,
-      cause:list[0].reason,
-      cardnum:list[0].carnum,
-      //cardtype:list[0].cartype,
-      start_date2:list[0].cardate,
-      goodsnum:list[0].goodsnum,
-      //goodstype:list[0].goodstype,
-      goods_start_date:list[0].goodsstartdate,
-      goods_end_date:list[0].goodsenddate,
-      objuid3:list[0].objuid
+      height:res.windowHeight,
+      peopleStartDate:util.formatDate(new Date())+' 00:00:00',
+      peopleEndDate:util.formatDate(new Date())+' 23:59:59',
+      cardate:util.formatDate(new Date()),
+      goodsStartDate:util.formatDate(new Date())+' 00:00:00',
+      goodsEndDate:util.formatDate(new Date())+' 23:59:59',
     })
-    //判断是否带有车辆信息
-    if(list[0].carnum!=''&&list[0].carnum!=null){
-      that.setData({
-        automobiletext:'删除车辆',
-        automobile:true,
-        carbgcolor:'red'
-      })
-    }
-    //判断是否带有物品信息
-    if(list[0].goodstype!=''&&list[0].goodstype!=null){
-      that.setData({
-        goodstext:'删除(限制)物品',
-        goods:true,
-        goodsbgcolor:'red'
-      })
-    }
-    //车辆类型
+    //时间初始值
+    app.globalData.peoplestarttime='',
+    app.globalData.peopleendtime='',
+    app.globalData.cartime='',
+    app.globalData.goodsstarttime='',
+    app.globalData.goodsendtime=''
+    //查询基础数据
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/to/modify/form.do',
       data: {
+        busType:options.bustype,
+        objuid:options.objuid
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        if(res.data.status == 200) {
+          that.setData({
+            name:res.data.data.name,
+            duty:res.data.data.businessName,
+            phonenum:res.data.data.phoneNumber,
+            peopleStartDate:res.data.data.personStartDate+':00',
+            peopleEndDate:res.data.data.personEndDate+':59',
+            companyname:res.data.data.companyName,
+            receivernameselect:res.data.data.receptionist,
+            receiveridselectid:res.data.data.receptionistUid,
+            cause:res.data.data.resonForVisiting,
+            dataobjuid:res.data.data.objuid,
+          })
+          if(res.data.data.plateNumber){
+            that.setData({
+              jichushuju:res.data.data
+            })
+          }
+          that.selectCar()
+          that.selectGoods()
+        }else{
+          wx.showToast({
+            title:res.data.message ,
+            icon: 'none',
+            duration: 5000
+          })
+          setTimeout(function() {
+            wx.hideToast()
+            wx.navigateBack({})
+          }, 5000)
+          return
+        }
+      }
+    })
+    //车辆类型
+    // wx.request({
+    //   url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
+    //   data: {
+    //   },
+    //   header: {
+    //     'content-type': 'application/x-www-form-urlencoded' 
+    //   },
+    //   method: 'POST',
+    //   async:false,
+    //   success(res) {
+    //     that.setData({
+    //       objectArray: res.data.data,
+    //     })
+    //     //判断是否带有车辆信息
+    //     console.log("___车辆____"+that.data.jichushuju.plateNumber)
+    //     if(that.data.jichushuju.plateNumber){
+    //       var carlength=that.data.jichushuju.plateNumber.length;
+    //       if(carlength==7){
+    //         that.setData({
+    //           switchovercarid:'切换新能源车牌',
+    //           flag:true
+    //         })
+    //       }else{
+    //         that.setData({
+    //           switchovercarid:'切换普通车牌',
+    //           flag:false
+    //         })
+    //       }
+    //       var inputPlateObj = {};
+    //       for(var i=0;i<carlength;i++){
+    //         var key = 'index'+i;
+    //         inputPlateObj[key] = that.data.jichushuju.plateNumber.charAt(i);
+    //       }
+    //       for(var j=0;j<that.data.objectArray.length;j++){
+    //         if(that.data.objectArray[j].name==that.data.jichushuju.carTypeName){
+    //           that.setData({
+    //             index:[j]
+    //           })
+    //         }
+    //       }
+    //       that.setData({
+    //         automobiletext:'删除车辆',
+    //         automobile:true,
+    //         carbgcolor:'red',
+    //         carnum:that.data.jichushuju.plateNumber,
+    //         cartype:that.data.jichushuju.carTypeName,
+    //         inputPlates:inputPlateObj,
+    //         carobjuid:that.data.jichushuju.carTypeUid,
+    //         cardate:that.data.jichushuju.carAuthDate
+    //       })
+    //     }
+    //   }
+    // })
+    //物品类型
+    // wx.request({
+    //   url: app.globalData.http+'://'+ app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
+    //   data: {
+    //   },
+    //   header: {
+    //     'content-type': 'application/x-www-form-urlencoded' 
+    //   },
+    //   method: 'POST',
+    //   success(res) {
+    //     that.setData({
+    //       objectArray2: res.data.data,
+    //     })
+    //    console.log("物品"+JSON.stringify(res))
+
+    //    //判断是否带有物品信息
+    //   if(that.data.jichushuju.objectTypeName){
+    //     for(var j=0;j<that.data.objectArray2.length;j++){
+    //       if(that.data.objectArray2[j].name==that.data.jichushuju.objectTypeName){
+    //         that.setData({
+    //           index2:[j]
+    //         })
+    //       }
+    //     }
+    //     that.setData({
+    //       goodstext:'删除(限制)物品',
+    //       goods:true,
+    //       goodsbgcolor:'red',
+    //       goodsobjuid:that.data.jichushuju.objectTypeUid,
+    //       goodsnum:that.data.jichushuju.objectCount,
+    //       goodsStartDate:that.data.jichushuju.objectStartDate+':00',
+    //       goodsEndDate:that.data.jichushuju.objectEndDate+':59',
+    //       goodstype:that.data.jichushuju.objectTypeName
+    //     })
+    //   }
+
+    //   }
+    // })
+    //查询接待人数据
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        idNumber:app.globalData.usercardid
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded' 
@@ -117,14 +241,72 @@ Page({
       method: 'POST',
       success(res) {
         that.setData({
-          objectArray: res.data.data,
+          peoplelist:res.data.data
         })
-       console.log(JSON.stringify(res))
+      //  console.log("___所有接待人__"+JSON.stringify(res))
       }
     })
-    //物品类型
+  },
+  selectCar:function(){
+    var that=this
     wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/car/type.do',
+      data: {
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      async:false,
+      success(res) {
+        that.setData({
+          objectArray: res.data.data,
+        })
+        //判断是否带有车辆信息
+        // console.log("___车辆____"+that.data.jichushuju.plateNumber)
+        if(that.data.jichushuju.plateNumber){
+          var carlength=that.data.jichushuju.plateNumber.length;
+          if(carlength==7){
+            that.setData({
+              switchovercarid:'切换新能源车牌',
+              flag:true
+            })
+          }else{
+            that.setData({
+              switchovercarid:'切换普通车牌',
+              flag:false
+            })
+          }
+          var inputPlateObj = {};
+          for(var i=0;i<carlength;i++){
+            var key = 'index'+i;
+            inputPlateObj[key] = that.data.jichushuju.plateNumber.charAt(i);
+          }
+          for(var j=0;j<that.data.objectArray.length;j++){
+            if(that.data.objectArray[j].name==that.data.jichushuju.carTypeName){
+              that.setData({
+                index:[j]
+              })
+            }
+          }
+          that.setData({
+            automobiletext:'删除车辆',
+            automobile:true,
+            carbgcolor:'red',
+            carnum:that.data.jichushuju.plateNumber,
+            cartype:that.data.jichushuju.carTypeName,
+            inputPlates:inputPlateObj,
+            carobjuid:that.data.jichushuju.carTypeUid,
+            cardate:that.data.jichushuju.carAuthDate
+          })
+        }
+      }
+    })
+  },
+  selectGoods:function(){
+    var that=this
+    wx.request({
+      url: app.globalData.http+'://'+ app.globalData.ip + '/' + app.globalData.projectName + '/api/get/object/type.do',
       data: {
       },
       header: {
@@ -135,88 +317,30 @@ Page({
         that.setData({
           objectArray2: res.data.data,
         })
-       console.log("物品"+JSON.stringify(res))
-      }
-    })
-    //拜访单位
-    wx.request({
-      url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/dept/list.do',
-      data: {
-      },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded' 
-      },
-      method: 'POST',
-      success(res) {
+      //  console.log("物品"+JSON.stringify(res))
+
+       //判断是否带有物品信息
+      if(that.data.jichushuju.objectTypeName){
+        for(var j=0;j<that.data.objectArray2.length;j++){
+          if(that.data.objectArray2[j].name==that.data.jichushuju.objectTypeName){
+            that.setData({
+              index2:[j]
+            })
+          }
+        }
         that.setData({
-          unitlist: res.data.data,
+          goodstext:'删除(限制)物品',
+          goods:true,
+          goodsbgcolor:'red',
+          goodsobjuid:that.data.jichushuju.objectTypeUid,
+          goodsnum:that.data.jichushuju.objectCount,
+          goodsStartDate:that.data.jichushuju.objectStartDate+':00',
+          goodsEndDate:that.data.jichushuju.objectEndDate+':59',
+          goodstype:that.data.jichushuju.objectTypeName
         })
-       console.log("####"+JSON.stringify(res))
       }
-    })
-    // //基础信息
-    // wx.request({
-    //   url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/person/info.do',
-    //   data: {
-    //     idNumber :app.globalData.usercardid
-    //   },
-    //   header: {
-    //     'content-type': 'application/x-www-form-urlencoded' 
-    //   },
-    //   method: 'POST',
-    //   success(res) {
-    //     if(res.data.status==200){
-    //       that.setData({
-    //         card:res.data.data.idNumber,
-    //         name:res.data.data.name,
-    //         duty:res.data.data.businessName,
-    //         phonenum:res.data.data.phoneNumber,
-    //         company2:res.data.data.companyName
-    //       })
-    //     }else{
-    //       wx.showToast({
-    //         title: '网络错误!',
-    //         icon: 'none',
-    //         duration: 1500
-    //       })
-    //       setTimeout(function() {
-    //         wx.hideToast()
-    //       }, 2000)
-    //     }
-    //    console.log("*****"+JSON.stringify(res))
-    //   }
-    // })
-    // that.setData({
-    //   start_date: time,
-    //   end_date: time,
-    //   start_date2:time,
-    //   goods_start_date:time,
-    //   goods_end_date:time
-    // })
-  },
-  DateChange(e) {
-    this.setData({
-      start_date: e.detail.value
-    })
-  },
-  DateChange2(e) {
-    this.setData({
-      end_date: e.detail.value
-    })
-  },
-  DateChange3(e) {
-    this.setData({
-      start_date2: e.detail.value
-    })
-  },
-  goodsDateChange(e){
-    this.setData({
-      goods_start_date: e.detail.value
-    })
-  },
-  goodsDateChange2(e){
-    this.setData({
-      goods_end_date: e.detail.value
+
+      }
     })
   },
   showModal(e) {
@@ -235,16 +359,80 @@ Page({
     var that=this
     this.setData({
       index: e.detail.value,
-      objuid:that.data.objectArray[e.detail.value].id,
-      cardtype:that.data.objectArray[e.detail.value].name
+      carobjuid:that.data.objectArray[e.detail.value].id,
+      cartype:that.data.objectArray[e.detail.value].name
     })
   },
   PickerChange2(e) {
     var that=this
     this.setData({
       index2: e.detail.value,
-      objuid2:that.data.objectArray2[e.detail.value].id,
+      goodsobjuid:that.data.objectArray2[e.detail.value].id,
       goodstype:that.data.objectArray2[e.detail.value].name
+    })
+  },
+  showModalreceiver(e) {
+    this.setData({
+      modalNamereceiver: e.currentTarget.dataset.target,
+      display:false
+    })
+  },
+  hideModalreceiver(e) {
+    this.setData({
+      display:true,
+      modalNamereceiver: null
+    })
+  },
+  receiversure:function(){
+    var that=this
+    if(that.data.receiverid==null||that.data.receiverid==''){
+      wx.showToast({
+        title: '请选择接待人!',
+        icon: 'none',
+        duration: 1500
+      })
+      setTimeout(function() {
+        wx.hideToast()
+      }, 2000)
+      return
+    }
+    that.setData({
+      receivernameselect:that.data.receivername,
+      receiveridselectid:that.data.receiverid,
+      modalNamereceiver: null,
+      display:true
+    })
+  },
+  radio_receiver:function(e){
+    var that=this
+    that.setData({
+      receiverid:e.currentTarget.dataset.id,
+      receivername:e.currentTarget.dataset.value
+    })
+  },
+  bfdwss(e){
+    this.setData({
+      bfdwss:e.detail.value
+    })
+  },
+  comsearch:function(e){
+    var that=this
+    //接待人
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/get/receptionist/list.do',
+      data: {
+        name:that.data.bfdwss
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        that.setData({
+          peoplelist: res.data.data,
+        })
+      //  console.log("____搜索接待人_____"+JSON.stringify(res))
+      }
     })
   },
   /**
@@ -322,7 +510,7 @@ Page({
   company:function(e){
     var that=this
     that.setData({
-      company2:e.detail.value
+      companyname:e.detail.value
     })
   },
   textareaAInput:function(e){
@@ -338,7 +526,7 @@ Page({
         scrolllocation:0,
         automobiletext:'添加车辆',
         automobile:false,
-        carbgcolor:'#6393e5'
+        carbgcolor:'#1380e2'
       })
     }else{
       that.setData({
@@ -356,7 +544,7 @@ Page({
         scrolllocation:0,
         goodstext:'添加(限制)物品',
         goods:false,
-        goodsbgcolor:'#6393e5'
+        goodsbgcolor:'#1380e2'
       })
     }else{
       that.setData({
@@ -367,15 +555,15 @@ Page({
       })
     }
   },
-  companysure:function(){
-    var that=this
-    that.setData({
-      companyselect:that.data.company,
-      companyselectid:that.data.companyid,
-      modalName: null,
-      display:true
-    })
-  },
+  // companysure:function(){
+  //   var that=this
+  //   that.setData({
+  //     companyselect:that.data.company,
+  //     companyselectid:that.data.companyid,
+  //     modalName: null,
+  //     display:true
+  //   })
+  // },
   radio_select:function(e){
     var that=this
     that.setData({
@@ -383,10 +571,10 @@ Page({
       company:e.currentTarget.dataset.value
     })
   },
-  cardnum:function(e){
+  carnum:function(e){
     var that=this
     that.setData({
-      cardnum:e.detail.value,
+      carnum:e.detail.value,
     })
   },
   goodsnum:function(e){
@@ -397,18 +585,17 @@ Page({
   },
   submitapply:function(){
     var that=this
-    console.log(999888777)
-    if (that.data.name.replace(/\s*/g, "") == '' || that.data.name == null) {
-      wx.showToast({
-        title: '姓名不得为空!',
-        icon: 'none',
-        duration: 1500
-      })
-      setTimeout(function() {
-        wx.hideToast()
-      }, 2000)
-      return
-    }
+    // if (that.data.name.replace(/\s*/g, "") == '' || that.data.name == null) {
+    //   wx.showToast({
+    //     title: '姓名不得为空!',
+    //     icon: 'none',
+    //     duration: 1500
+    //   })
+    //   setTimeout(function() {
+    //     wx.hideToast()
+    //   }, 2000)
+    //   return
+    // }
     // if (that.data.duty.replace(/\s*/g, "") == '' || that.data.duty == null) {
     //   wx.showToast({
     //     title: '职务不得为空!',
@@ -431,174 +618,200 @@ Page({
     //   }, 2000)
     //   return
     // }
-    if (that.data.company2.replace(/\s*/g, "") == '' || that.data.company2 == null) {
-      wx.showToast({
-        title: '所属公司不得为空!',
-        icon: 'none',
-        duration: 1500
-      })
-      setTimeout(function() {
-        wx.hideToast()
-      }, 2000)
-      return
-    }
-    if (that.data.companyselect.replace(/\s*/g, "") == '' || that.data.companyselect == null) {
-      wx.showToast({
-        title: '请选择拜访单位!',
-        icon: 'none',
-        duration: 1500
-      })
-      setTimeout(function() {
-        wx.hideToast()
-      }, 2000)
-      return
-    }
-    if(that.data.automobile){
-      if (that.data.cardnum.replace(/\s*/g, "") == '' || that.data.cardnum == null) {
-        wx.showToast({
-          title: '车牌号不得为空!',
-          icon: 'none',
-          duration: 1500
-        })
-        setTimeout(function() {
-          wx.hideToast()
-        }, 2000)
-        return
-      }
-      if(that.data.switchovercarid=='切换新能源车牌'){
-        if(that.data.cardnum.length<7){
+    // if (that.data.companyname.replace(/\s*/g, "") == '' || that.data.companyname == null) {
+    //   wx.showToast({
+    //     title: '所属公司不得为空!',
+    //     icon: 'none',
+    //     duration: 1500
+    //   })
+    //   setTimeout(function() {
+    //     wx.hideToast()
+    //   }, 2000)
+    //   return
+    // }
+    // if(that.data.automobile){
+    //   if (that.data.carnum.replace(/\s*/g, "") == '' || that.data.carnum == null) {
+    //     wx.showToast({
+    //       title: '车牌号不得为空!',
+    //       icon: 'none',
+    //       duration: 1500
+    //     })
+    //     setTimeout(function() {
+    //       wx.hideToast()
+    //     }, 2000)
+    //     return
+    //   }
+    //   if(that.data.switchovercarid=='切换新能源车牌'){
+    //     if(that.data.carnum.length<7){
 
-          wx.showToast({
-            title: '车牌号输入有误!',
-            icon: 'none',
-            duration: 1500
-          })
-          setTimeout(function() {
-            wx.hideToast()
-          }, 2000)
-          return
-        }
-      }
-      if(that.data.switchovercarid=='切换普通车牌'){
-        if(that.data.cardnum.length<8){
-          wx.showToast({
-            title: '车牌号输入有误!',
-            icon: 'none',
-            duration: 1500
-          })
-          setTimeout(function() {
-            wx.hideToast()
-          }, 2000)
-          return
-        }
-      }
-      if (that.data.cardtype.replace(/\s*/g, "") == '' || that.data.cardtype == null) {
-        wx.showToast({
-          title: '请选择车辆类型!',
-          icon: 'none',
-          duration: 1500
-        })
-        setTimeout(function() {
-          wx.hideToast()
-        }, 2000)
-        return
-      }
-    }
-    if(that.data.goods){
-      if (that.data.goodstype.replace(/\s*/g, "") == '' || that.data.goodstype == null) {
-        wx.showToast({
-          title: '请选择(限制)物品类型!',
-          icon: 'none',
-          duration: 1500
-        })
-        setTimeout(function() {
-          wx.hideToast()
-        }, 2000)
-        return
-      }
-      if ( that.data.goodsnum == null) {
-        wx.showToast({
-          title: '(限制)物品数量不得为空!',
-          icon: 'none',
-          duration: 1500
-        })
-        setTimeout(function() {
-          wx.hideToast()
-        }, 2000)
-        return
-      }
-    }
-    var formlist={}
-    formlist.idNumber=that.data.card
-    formlist.objuid=that.data.objuid3
-    formlist.name=that.data.name
-    formlist.businessName=that.data.duty
-    formlist.phoneNumber=that.data.phonenum
-    formlist.personAuthStartDate=that.data.start_date
-    formlist.personAuthEndDate=that.data.end_date
-    formlist.companyName=that.data.company2
-    formlist.managerDeptUid=that.data.companyselectid
-    formlist.reasonForVisiting=that.data.cause
-    if(that.data.automobile){
-      console.log(333333333)
-      var carInfo = {};
-      carInfo.plateNumber=that.data.cardnum
-      carInfo.carTypeUid=that.data.objuid
-      carInfo.carAuthDate=that.data.start_date2
-      formlist.carInfo = carInfo;
-      console.log(formlist)
-    }else{
-      
-    }
-    if(that.data.goods){
-      console.log(99999999)
-      var objectInfo = {};
-      objectInfo.objectTypeUid=that.data.objuid2
-      objectInfo.objectCount=that.data.goodsnum
-      objectInfo.objectAuthStartDate=that.data.goods_start_date
-      objectInfo.objectAuthEndDate=that.data.goods_start_date
-      formlist.objectInfo=objectInfo
-    }else{
-      
-    }
-    console.log("___修改提交___"+JSON.stringify(formlist))
-    // wx.request({
-    //   url: 'https://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/create.do',
-    //   data: {
-    //     formList:JSON.stringify(formlist)
-    //   },
-    //   header: {
-    //     'content-type': 'application/x-www-form-urlencoded' 
-    //   },
-    //   method: 'POST',
-    //   success(res) {
-    //     if(res.data.status==200){
     //       wx.showToast({
-    //         title:'申请成功' ,
-    //         icon: 'success',
-    //         duration: 1500
-    //       })
-    //       setTimeout(function() {
-    //         wx.hideToast()
-    //       }, 2000)
-    //     }
-    //     if(res.data.status==500){
-    //       wx.showToast({
-    //         title:res.data.message ,
+    //         title: '车牌号输入有误!',
     //         icon: 'none',
     //         duration: 1500
     //       })
     //       setTimeout(function() {
     //         wx.hideToast()
     //       }, 2000)
+    //       return
     //     }
-    //    console.log(JSON.stringify(res))
     //   }
-    // })
+    //   if(that.data.switchovercarid=='切换普通车牌'){
+    //     if(that.data.carnum.length<8){
+    //       wx.showToast({
+    //         title: '车牌号输入有误!',
+    //         icon: 'none',
+    //         duration: 1500
+    //       })
+    //       setTimeout(function() {
+    //         wx.hideToast()
+    //       }, 2000)
+    //       return
+    //     }
+    //   }
+    //   if (that.data.cartype.replace(/\s*/g, "") == '' || that.data.cartype == null) {
+    //     wx.showToast({
+    //       title: '请选择车辆类型!',
+    //       icon: 'none',
+    //       duration: 1500
+    //     })
+    //     setTimeout(function() {
+    //       wx.hideToast()
+    //     }, 2000)
+    //     return
+    //   }
+    // }
+    // if(that.data.goods){
+    //   if (that.data.goodstype.replace(/\s*/g, "") == '' || that.data.goodstype == null) {
+    //     wx.showToast({
+    //       title: '请选择(限制)物品类型!',
+    //       icon: 'none',
+    //       duration: 1500
+    //     })
+    //     setTimeout(function() {
+    //       wx.hideToast()
+    //     }, 2000)
+    //     return
+    //   }
+    //   if ( that.data.goodsnum == null) {
+    //     wx.showToast({
+    //       title: '(限制)物品数量不得为空!',
+    //       icon: 'none',
+    //       duration: 1500
+    //     })
+    //     setTimeout(function() {
+    //       wx.hideToast()
+    //     }, 2000)
+    //     return
+    //   }
+    //}
+
+
+
+    var formlist={}
+    formlist.idNumber=that.data.card
+    formlist.objuid=that.data.dataobjuid
+    formlist.name=that.data.name
+    formlist.businessName=that.data.duty
+    formlist.phoneNumber=that.data.phonenum
+    if(app.globalData.peoplestarttime){
+      formlist.personAuthStartDate=app.globalData.peoplestarttime
+    }else{
+      formlist.personAuthStartDate=that.data.peopleStartDate
+    }
+    if(app.globalData.peopleendtime){
+      formlist.personAuthEndDate=app.globalData.peopleendtime
+    }else{
+      formlist.personAuthEndDate=that.data.peopleEndDate
+    }
+    formlist.companyName=that.data.companyname
+    formlist.reasonForVisiting=that.data.cause
+    formlist.receptionist=that.data.receiveridselectid
+    if(that.data.automobile){
+      var carInfo = {};
+      if(that.data.carnum.length<7){
+        wx.showToast({
+          title: '车牌号输入有误!',
+          icon: 'none',
+          duration: 1500
+        })
+        setTimeout(function() {
+          wx.hideToast()
+        }, 2000)
+        return
+      }
+      carInfo.plateNumber=that.data.carnum
+      carInfo.carTypeUid=that.data.carobjuid
+      if(app.globalData.cartime){
+        carInfo.carAuthDate=app.globalData.cartime
+      }else{
+        carInfo.carAuthDate=that.data.cardate
+      }
+      formlist.carInfo = carInfo;
+    }
+    if(that.data.goods){
+      var objectInfo = {};
+      objectInfo.objectTypeUid=that.data.goodsobjuid
+      objectInfo.objectCount=that.data.goodsnum
+      if(app.globalData.goodsstarttime){
+        objectInfo.objectAuthStartDate=app.globalData.goodsstarttime
+      }else{
+        objectInfo.objectAuthStartDate=that.data.goodsStartDate
+      }
+      if(app.globalData.goodsendtime){
+        objectInfo.objectAuthEndDate=app.globalData.goodsendtime
+      }else{
+        objectInfo.objectAuthEndDate=that.data.goodsEndDate
+      }
+      formlist.objectInfo=objectInfo
+    }
+    wx.request({
+      url: app.globalData.http+'://' + app.globalData.ip + '/' + app.globalData.projectName + '/api/person/apply/modify.do',
+      data: {
+        formList:JSON.stringify(formlist)
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' 
+      },
+      method: 'POST',
+      success(res) {
+        if(res.data.status==200){
+          wx.showToast({
+            title:'提交成功' ,
+            icon: 'success',
+            duration: 1500
+          })
+          setTimeout(function() {
+            wx.hideToast()
+            app.globalData.peoplestarttime='',
+            app.globalData.peopleendtime='',
+            app.globalData.cartime='',
+            app.globalData.goodsstarttime='',
+            app.globalData.goodsendtime=''
+            wx.reLaunch({
+              url: '../index/index'
+            })
+          }, 2000)
+        }
+        if(res.data.status==500){
+          wx.showToast({
+            title:res.data.message ,
+            icon: 'none',
+            duration: 1500
+          })
+          setTimeout(function() {
+            wx.hideToast()
+          }, 2000)
+        }
+      //  console.log("___修改返回结果_____"+JSON.stringify(res))
+      }
+    })
   },
+  
+
+
+
+  
   //车牌号输入法
-
-
   //切换车牌
   changeplate:function(){
     var that = this;
@@ -606,7 +819,7 @@ Page({
       flag:false,
       switchovercarid:'切换普通车牌',
       switchovercartext:'changeplate1',
-      cardnum:'',
+      carnum:'',
       inputPlates: {
         index0: "",
         index1: "",
@@ -626,7 +839,7 @@ Page({
       flag: true,
       switchovercarid:'切换新能源车牌',
       switchovercartext:'changeplate',
-      cardnum:'',
+      carnum:'',
       inputPlates: {
         index0: "",
         index1: "",
@@ -644,7 +857,7 @@ Page({
   //打开输入法
   inputClick:function(t){
     var that = this;
-    console.log('输入框:', t)
+    // console.log('输入框:', t)
     that.setData({
       inputOnFocusIndex : t.target.dataset.id,
       isKeyboard: !0
@@ -666,7 +879,7 @@ Page({
   tapKeyboard: function (t) {
     t.target.dataset.index;
     var a = t.target.dataset.val;
-    console.log('键盘:',a)
+    // console.log('键盘:',a)
     switch (this.data.inputOnFocusIndex) {
       case "0":
         this.setData({
@@ -725,9 +938,9 @@ Page({
  
     }
     var n = this.data.inputPlates.index0 + this.data.inputPlates.index1 + this.data.inputPlates.index2 + this.data.inputPlates.index3 + this.data.inputPlates.index4 + this.data.inputPlates.index5 + this.data.inputPlates.index6 + this.data.inputPlates.index7
-    console.log('车牌号:',n)
+    // console.log('车牌号:',n)
     this.setData({
-      cardnum:n
+      carnum:n
     })
     this.checkedSubmitButtonEnabled();
   },

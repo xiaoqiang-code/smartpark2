@@ -2,24 +2,40 @@
   "pages": [
     "pages/index/index",
     "pages/qrcode/qrcode",
+    "pages/Myinformation/Myinformation",
+    "pages/role_assignment/role_assignment",
+    "pages/gomodify/gomodify",
+    "pages/HandleCode/HandleCode",
+    "pages/receiveraudit/receiveraudit",   
     "pages/peopleapply/peopleapply",
     "pages/goVisa/goVisa",
     "pages/carapply/carapply",
     "pages/goodsapply/goodsapply",
-    "pages/gomodify/gomodify",
     "pages/gomodify_car/gomodify_car",
     "pages/gomodify_goods/gomodify_goods",
-    "pages/HandleCode/HandleCode",
-    "pages/Myinformation/Myinformation"
+    "pages/jiedai_history/jiedai_history",
+    "pages/govisa_history/govisa_history",
+    "pages/authority_management/authority_management",
+    "pages/authority_management_edit/authority_management_edit",
+    "pages/authority_management_add/authority_management_add",
+    "pages/yg_add/yg_add",
+    "pages/yg_edit/yg_edit",
+    "pages/history/history"
+
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0000FF",
+    "navigationBarBackgroundColor": "#1380e2",
     "navigationBarTitleText": "首页",
     "navigationBarTextStyle": "white"
   },
   "usingComponents": {
-    "cu-custom": "/colorui/components/cu-custom"
+    "cu-custom": "/colorui/components/cu-custom",
+    "rui-dtpicker": "/component/picker/picker",
+    "rui-dtpicker2": "/component/pickertwo/picker",
+    "rui-dtpicker3": "/component/pickerthree/picker",
+    "rui-dtpicker4": "/component/pickerfour/picker",
+    "rui-dtpicker5": "/component/pickerfive/picker"
   },
   "sitemapLocation": "sitemap.json"
 }

@@ -1,236 +1,255 @@
+<view style="width:100%;height:{{height}}px;background-color:#F1F7FF;">
+  <scroll-view scroll-y="true" scroll-top="{{scrolllocation}}px;" style="height:{{height*0.7}}px;background-color:#F1F7FF;">
+    <view class="cu-bar" style="background-color:#F1F7FF;">
+      <view class="action">
+        <text class="cuIcon-title text-blue"></text>
+        <text class="text-xl text-blue text-bold">人员信息</text>
+      </view>
+    </view>
+    <view>
+      <input type="text" placeholder="证件号" value="{{card}}" disabled class="input_css"></input> 
+    </view>
+    <view>
+      <input type="text" placeholder="姓名" value="{{name}}" bindinput="name" class="input_css"></input> 
+    </view>
+    <view>
+      <input type="text" placeholder="职务" value="{{duty}}" bindinput="duty" class="input_css"></input> 
+    </view>
+    <view>
+      <input type="text" placeholder="电话号码" value="{{phonenum}}" bindinput="phonenum" class="input_css"></input> 
+    </view>
+    <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+      <view class="title">授权起始日期</view>
+      <rui-dtpicker wx:if="{{peopleStartDate}}"
+        start="2020-01-01 00:00:00"
+        end="2035-12-31 00:00:00"
+        value="{{peopleStartDate}}"
+        fields="second"
+        bindchangedatepicker="changeDate"
+        bindcanceldatepicker="cancelDate"
+        style="margin-left:30px;"
+      ></rui-dtpicker>
+    </view>
+    <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+      <view class="title">授权结束日期</view>
+      <rui-dtpicker2 wx:if="{{peopleEndDate}}"
+        start="2020-01-01 23:59:59" 
+        end="2035-12-31 23:59:59" 
+        value="{{peopleEndDate}}" 
+        fields="second"
+        bindchangedatepicker="changeDate"
+        bindcanceldatepicker="cancelDate"
+        style="margin-left:30px;"
+      ></rui-dtpicker2>
+    </view>
+    <view>
+      <input type="text" placeholder="公司完整名称" value="{{companyname}}" bindinput="company" class="input_css"></input> 
+    </view>
+    <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+      <view class="action" style="width: 60px;">
+        接待人
+      </view>
+      <view style="margin-right:30rpx;width: 166px;text-align:right;">{{receivernameselect}}</view>
+      
+      <view class="action" style="width:20%;">
+        <button class="cu-btn line-blue round " style="width:100%;" bindtap="showModalreceiver" data-target="bottomModal">选择</button>
+      </view>
+    </view>
+    <view wx:if="{{display}}" class="cu-form-group" style="border:1px solid #e5f2fe;width:88%;height:100px;margin-left:6%;margin-top:10px;border-radius:10px;">
+      <textarea maxlength="-1" bindinput="textareaAInput" value="{{cause}}" placeholder="填写来访原因,如：从事xxx工作，为期x天。"></textarea>
+    </view>
+    <!-- 车辆信息 -->
+    <view style="background-color:#F1F7FF;" wx:if="{{automobile}}">
+      <view class="cu-bar">
+        <view class="action">
+          <text class="cuIcon-title text-blue"></text>
+          <text class="text-xl text-blue text-bold">车辆信息</text>
+        </view>
+      </view>
+      <view style="width:88%;height: 180rpx;margin-left:6%;border:1px solid #e5f2fe;border-radius:10px;background-color: white;">
+        <view style="display: flex;background-color: white;height: 70rpx;margin-top:10px;">
+          <view style="width:50%;height:60rpx;">
+            <text style="margin-left: 30rpx;font-size:32rpx;margin-top: 10rpx;color:#808080;">车牌号</text>
+          </view>
+          <view style="width:50%;margin-top: 10rpx;">
+            <text style="color:blue;" bindtap='{{switchovercartext}}'>[{{switchovercarid}}]</text>
+          </view>
+        </view>
+        <view style="background-color: white;height: 80rpx;">
+          <view style="width:100%;margin-left: 20rpx;">
+            <view class="plate-input-body">
+            <view class="plate-input-content" wx:if="{{flag}}">
+              <view class="{{inputOnFocusIndex=='0'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="0">{{inputPlates.index0}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='1'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="1">{{inputPlates.index1}}</text>
+              </view>
+              <view style="width:15px;margin-top: 8px;">
+                <text style="margin-left:4px;">•</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='2'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="2">{{inputPlates.index2}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='3'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="3">{{inputPlates.index3}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='4'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="4">{{inputPlates.index4}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='5'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="5">{{inputPlates.index5}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='6'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="6">{{inputPlates.index6}}</text>
+              </view>
+            </view>
+            <view class="new-plate-input-content" wx:else="">
+              <view class="{{inputOnFocusIndex=='0'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="0">{{inputPlates.index0}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='1'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="1">{{inputPlates.index1}}</text>
+              </view>
+              <view style="width:15px;margin-top: 8px;">
+                <text style="margin-left:4px;">•</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='2'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="2">{{inputPlates.index2}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='3'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="3">{{inputPlates.index3}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='4'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="4">{{inputPlates.index4}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='5'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="5">{{inputPlates.index5}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='6'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="6">{{inputPlates.index6}}</text>
+              </view>
+              <view class="{{inputOnFocusIndex=='7'?'plate-nums-foc':'plate-nums-first'}}">
+                <text bindtap="inputClick" class="plate-num-text" data-id="7">{{inputPlates.index7}}</text>
+              </view>
+            </view>
+            </view>
+          </view>
+        </view>
 
-<scroll-view scroll-y="true" scroll-top="{{scrolllocation}}px;" style="height:500px;">
-  <view class="cu-bar bg-white">
-    <view class="action">
-      <text class="cuIcon-title text-blue"></text>
-      <text class="text-xl text-blue text-bold">人员信息</text>
-    </view>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">身份证号：</view>
-		<input value="{{card}}" disabled></input>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">姓名：</view>
-		<input placeholder="请输入姓名" value="{{name}}" bindinput="name"></input>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">职务：</view>
-		<input placeholder="请输入职务" value="{{duty}}" bindinput="duty"></input>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">电话号码：</view>
-		<input placeholder="请输入电话号码" value="{{phonenum}}" bindinput="phonenum"></input>
-  </view>
-  <view class="cu-form-group">
-    <view class="title">授权起始日期：</view>
-    <picker mode="date" value="{{start_date}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange">
-      <view class="picker" value="{{start_date}}">
-        {{start_date}}
       </view>
-    </picker>
-  </view>
-  <view class="cu-form-group">
-    <view class="title">授权结束日期：</view>
-    <picker mode="date" value="{{end_date}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange2">
-      <view class="picker">
-        {{end_date}}
+      
+        
+      <view class="input_css" style="color:#808080;fint-size:20px;">
+        <view class="title" style="float:left;margin-top:4%;">车辆类型</view>
+        <picker style="float:right;margin-right:20px;margin-top:4%;" bindchange="PickerChange" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
+          <view class="picker">
+            {{index?objectArray[index].name:'未选择'}}
+            <text class="cuIcon-roundright lg text-gray"></text>
+          </view>
+        </picker>
       </view>
-    </picker>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">所属公司：</view>
-		<input placeholder="请输入所属公司名称" value="{{company2}}" bindinput="company"></input>
-  </view>
-  <view class="cu-bar bg-white">
-  <view class="action">
-    拜访单位：
-  </view>
-  <view class="action">
-    <text style="margin-right:30rpx;">{{companyselect}}</text>
-    <button class="cu-btn line-green round" bindtap="showModal" data-target="bottomModal">选择</button>
-  </view>
-  </view>
 
-  <view wx:if="{{display}}" class="cu-form-group">
-		<textarea maxlength="-1" bindinput="textareaAInput" value="{{cause}}" placeholder="请输入来访事由"></textarea>
-  </view>
-  
-
-
-<!-- 车辆信息 -->
- <view wx:if="{{automobile}}">
-  <view class="cu-bar bg-white">
-    <view class="action">
-      <text class="cuIcon-title text-blue"></text>
-      <text class="text-xl text-blue text-bold">车辆信息</text>
-    </view>
-  </view>
-  <view style="display: flex;background-color: white;height: 60rpx;">
-    <view style="width:30%;height:40rpx;">
-      <text style="margin-left: 30rpx;font-size:32rpx;margin-top: 10rpx;">车牌号：</text>
-    </view>
-    <view style="width:40%;margin-left: 360rpx;margin-top: 10rpx;">
-      <text style="color:blue;" bindtap='{{switchovercartext}}'>[{{switchovercarid}}]</text>
-    </view>
-  </view>
-  <view style="background-color: white;height: 60rpx;">
-    <view style="width:80%;margin-left: 20rpx;">
-      <view class="plate-input-body">
-      <view class="plate-input-content" wx:if="{{flag}}">
-        <view class="{{inputOnFocusIndex=='0'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="0">{{inputPlates.index0}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='1'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="1">{{inputPlates.index1}}</text>
-        </view>
-        <view style="width:15px;margin-top: 8px;">
-          <text style="margin-left:4px;">•</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='2'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="2">{{inputPlates.index2}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='3'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="3">{{inputPlates.index3}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='4'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="4">{{inputPlates.index4}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='5'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="5">{{inputPlates.index5}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='6'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="6">{{inputPlates.index6}}</text>
-        </view>
-      </view>
-      <view class="new-plate-input-content" wx:else="">
-        <view class="{{inputOnFocusIndex=='0'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="0">{{inputPlates.index0}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='1'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="1">{{inputPlates.index1}}</text>
-        </view>
-        <view style="width:15px;margin-top: 8px;">
-          <text style="margin-left:4px;">•</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='2'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="2">{{inputPlates.index2}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='3'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="3">{{inputPlates.index3}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='4'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="4">{{inputPlates.index4}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='5'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="5">{{inputPlates.index5}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='6'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="6">{{inputPlates.index6}}</text>
-        </view>
-        <view class="{{inputOnFocusIndex=='7'?'plate-nums-foc':'plate-nums-first'}}">
-          <text bindtap="inputClick" class="plate-num-text" data-id="7">{{inputPlates.index7}}</text>
-        </view>
-      </view>
+      <view class="input_css" style="color:#808080;">
+        <view class="title" style="float:left;margin-top:3%;">授权日期</view>
+        <rui-dtpicker3 wx:if="{{cardate}}"
+          start="2020-01-01" 
+          end="2035-12-31" 
+          value="{{cardate}}" 
+          fields="day"
+          bindchangedatepicker="changeDate"
+          bindcanceldatepicker="cancelDate"
+          style="float:right;margin-right:20px;margin-top:4%;"
+        ></rui-dtpicker3>
       </view>
     </view>
-  </view>
-  <view class="cu-form-group">
-		<view class="title">车辆类型：</view>
-		<picker bindchange="PickerChange" data-id="{{objectArray[index].id}}" value="{{index}}" range="{{objectArray}}" range-key="name">
-			<view class="picker">
-				{{index?objectArray[index].name:'未选择'}}
-			</view>
-		</picker>
-	</view>
-  <view class="cu-form-group">
-    <view class="title">授权日期(当天有效)：</view>
-    <picker mode="date" value="{{start_date2}}" start="2020-01-01" end="2050-09-01" bindchange="DateChange3">
-      <view class="picker" value="{{start_date2}}">
-        {{start_date2}}
+    <!-- 物品信息 -->
+    <view style="background-color:#F1F7FF;" wx:if="{{goods}}">
+      <view class="cu-bar">
+        <view class="action">
+          <text class="cuIcon-title text-blue"></text>
+          <text class="text-xl text-blue text-bold">(限制)物品信息</text>
+        </view>
       </view>
-    </picker>
-  </view>
- </view>
-<!-- 物品信息 -->
-<view wx:if="{{goods}}">
-  <view class="cu-bar bg-white">
-    <view class="action">
-      <text class="cuIcon-title text-blue"></text>
-      <text class="text-xl text-blue text-bold">(限制)物品信息</text>
-    </view>
-  </view>
-  <view class="cu-form-group">
-		<view class="title">物品类型：</view>
-		<picker bindchange="PickerChange2" data-id="{{objectArray2[index2].id}}" value="{{index2}}" range="{{objectArray2}}" range-key="name">
-			<view class="picker">
-				{{index2?objectArray2[index2].name:'未选择'}}
-			</view>
-		</picker>
-  </view>
-  <view style="padding-top: 10px;" class="cu-form-group">
-		<view class="title">物品数量：</view>
-		<input placeholder="请输入物品数量" value="{{goodsnum}}" bindchange="goodsnum"></input>
-  </view>
-  <view class="cu-form-group">
-  <view class="title">授权起始日期：</view>
-  <picker mode="date" value="{{goods_start_date}}" start="2020-01-01" end="2050-09-01" bindchange="goodsDateChange">
-    <view class="picker">
-      {{goods_start_date}}
-    </view>
-  </picker>
-  </view>
-  <view class="cu-form-group">
-    <view class="title">授权结束日期：</view>
-    <picker mode="date" value="{{goods_end_date}}" start="2020-01-01" end="2050-09-01" bindchange="goodsDateChange2">
-      <view class="picker">
-        {{goods_end_date}}
+      <view class="input_css" style="color:#808080;fint-size:20px;">
+        <view class="title" style="float:left;margin-top:4%;">物品类型：</view>
+        <picker bindchange="PickerChange2" style="float:right;margin-right:20px;margin-top:4%;" data-id="{{objectArray2[index2].id}}" value="{{index2}}" range="{{objectArray2}}" range-key="name">
+          <view class="picker">
+            {{index2?objectArray2[index2].name:'未选择'}}
+            <text class="cuIcon-roundright lg text-gray"></text>
+          </view>
+        </picker>
       </view>
-    </picker>
+      <view>
+        <input type="text" value="{{goodsnum}}" placeholder="物品数量" bindinput="goodsnum" class="input_css"></input> 
+      </view>
+      <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+        <view class="title">授权起始日期</view>
+        <rui-dtpicker4 wx:if="{{goodsStartDate}}"
+          start="2020-01-01 00:00:00"
+          end="2035-12-31 00:00:00"
+          value="{{goodsStartDate}}"
+          fields="second"
+          bindchangedatepicker="changeDate"
+          bindcanceldatepicker="cancelDate"
+          style="margin-left:30px;"
+        ></rui-dtpicker4>
+      </view>
+      <view class="input_css" style="display:flex;align-items: center; vertical-align: center;flex-direction:row;color:#808080;">
+        <view class="title">授权结束日期</view>
+        <rui-dtpicker5 wx:if="{{goodsEndDate}}"
+          start="2020-01-01 23:59:59" 
+          end="2035-12-31 23:59:59" 
+          value="{{goodsEndDate}}" 
+          fields="second"
+          bindchangedatepicker="changeDate"
+          bindcanceldatepicker="cancelDate"
+          style="margin-left:30px;"
+        ></rui-dtpicker5>
+      </view>
+    </view>
+  </scroll-view>
+  <view  style="padding: 20rpx 50rpx 0rpx 50rpx;width: 370rpx;float: left;">
+    <button bindtap="addautomobile" style="width: 290rpx;background-color:{{carbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
+      {{automobiletext}}</button>
+  </view>
+  <view  style="padding: 20rpx 50rpx 20rpx 10rpx;width: 370rpx;float: left;">
+    <button bindtap="addgoods" style="width: 320rpx;background-color:{{goodsbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
+      {{goodstext}}</button>
+  </view>
+  <view class="padding-xl">
+    <button bindtap="submitapply" style="background-color:#1380e2;color:white;" class="cu-btn block margin-tb-sm lg">
+      <text class="cuIcon-upload"></text> 提交申请</button>
   </view>
 </view>
 
-</scroll-view>
-
-<view  style="padding: 20rpx 50rpx 0rpx 50rpx;width: 370rpx;float: left;">
-  <button bindtap="addautomobile" style="width: 290rpx;background-color:{{carbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
-    {{automobiletext}}</button>
-</view>
-<view  style="padding: 20rpx 50rpx 20rpx 50rpx;width: 370rpx;float: left;">
-  <button bindtap="addgoods" style="width: 290rpx;background-color:{{goodsbgcolor}};color:white;" class="cu-btn block margin-tb-sm lg">
-    {{goodstext}}</button>
-</view>
-<view class="padding-xl">
-  <button bindtap="submitapply" style="background-color:#6393e5;color:white;" class="cu-btn block margin-tb-sm lg">
-    <text class="cuIcon-upload"></text> 提交申请</button>
-</view>
-
-<view class="cu-modal bottom-modal {{modalName=='bottomModal'?'show':''}}">
+<!-- 选择接待人 -->
+<view class="cu-modal bottom-modal {{modalNamereceiver=='bottomModal'?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action text-green" bindtap="companysure">确定</view>
-      <view class="action text-blue" bindtap="hideModal">取消</view>
+      <view class="action text-green" bindtap="receiversure">确定</view>
+      <view class="action text-blue" bindtap="hideModalreceiver">取消</view>
     </view>
     <view style="width:100%;">
       <view class="cu-bar search bg-white">
         <view class="search-form round">
           <text class="cuIcon-search"></text>
-          <input type="text" placeholder="搜索单位名称" confirm-type="search"></input>
+          <input type="text" bindinput="bfdwss" placeholder="搜索接待人" confirm-type="search"></input>
         </view>
         <view class="action">
-          <button class="cu-btn bg-green shadow-blur round">搜索</button>
+          <button bindtap="comsearch" class="cu-btn bg-green shadow-blur round">搜索</button>
         </view>
       </view>
     </view>
     <scroll-view scroll-y="true" scroll-with-animation="true" style="height: 500px;">
       <radio-group class="block">
       <view  class="cu-list menu-avatar">
-        <view wx:for="{{unitlist}}" style="height:80rpx;" class="cu-item">
+        <view wx:for="{{peoplelist}}" style="height:80rpx;" class="cu-item">
           <view style="left:70rpx;" class="content">
             <view class="text-grey">{{item.name}}</view>
           </view>
           <view class="action">
-            <radio data-id="{{item.id}}" data-value="{{item.name}}" bindtap="radio_select" class="radio"></radio>
+            <radio data-id="{{item.id}}" data-index="{{index}}" data-value="{{item.name}}" bindtap="radio_receiver" class="radio"></radio>
           </view>
         </view>
       </view>
@@ -238,7 +257,6 @@
     </scroll-view>
   </view>
 </view>
-
 
 
 <!--键盘-->
@@ -266,9 +284,6 @@
         <view catchtap="tapKeyboard" class="td td_nor" data-index="{{idx}}" data-val="{{itemName}}" hoverClass="board_bg" hoverStartTime="0" hoverStayTime="80" wx:if="{{idx>25}}" wx:for="{{keyboard1}}" wx:for-index="idx" wx:for-item="itemName" wx:key="{{itemName}}">
           {{itemName}}
         </view>
-      </view>
-      <view bindtap="tapSpecBtn" class="del-first" data-index="0" hoverClass="del-hover" hoverStartTime="0" hoverStayTime="80">
-        <image class="del-img" data-index="0" mode="scaleToFill" src="../../images/delete.png"></image>
       </view>
     </view>
     <view style="width:100%; text-align:center;" wx:if="{{isNumberKB}}">
@@ -302,9 +317,6 @@
         <view catchtap="tapKeyboard" class="td td_num" data-index="{{idx}}" data-val="{{itemName}}" hoverClass="board_bg" hoverStartTime="0" hoverStayTime="80" wx:if="{{tapNum&&idx>33}}" wx:for="{{keyboardNumber}}" wx:for-index="idx" wx:for-item="itemName" wx:key="{{itemName}}">
           {{itemName}}
         </view>
-      </view>
-      <view bindtap="tapSpecBtn" class="del-first" data-index="0" hoverClass="del-hover" hoverStartTime="0" hoverStayTime="80">
-        <image class="del-img" data-index="0" mode="scaleToFill" src="../../images/delete.png"></image>
       </view>
     </view>
   </view>

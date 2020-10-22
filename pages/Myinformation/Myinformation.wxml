@@ -1,22 +1,28 @@
-<scroll-view scroll-y="{{modalName==null}}" class="page {{modalName!=null?'show':''}}">
-  <view class="cu-list menu">
-    <view class="cu-item">
-      <view class="content">
-        <text class="text-grey">姓名</text>
-      </view>
-      <view class="action">
-        <text class="text-grey text-sm">张三</text>
-      </view>
-    </view>
+<view style="width:100%;height:{{height}}px;background-color:white;display: inline-block;font-size:18px;">
+  <view wx:if="{{name}}" class="input_css">
+    <view style="color:#858585;">姓名：</view>
+    <view>{{name}}</view>
   </view>
-  <view class="cu-list menu">
-    <view class="cu-item">
-      <view class="content">
-        <text class="text-grey">身份证号</text>
-      </view>
-      <view class="action">
-        <text class="text-grey text-sm" style="text-align:left">1234567</text>
-      </view>
-    </view>
+  <view wx:if="{{eid}}" class="input_css">
+    <view style="color:#858585;">胸卡号：</view>
+    <view>{{eid}}</view>
   </view>
-</scroll-view>
+  <view wx:if="{{phoneNumber}}" class="input_css">
+    <view style="color:#858585;">手机号：</view>
+    <view>{{phoneNumber}}</view>
+  </view>
+  <view wx:if="{{duty}}" class="input_css">
+    <view style="color:#858585;">职务：</view>
+    <view>{{duty}}</view>
+  </view>
+  <view wx:if="{{com}}" class="input_css">
+    <view style="color:#858585;">公司：</view>
+    <view>{{com}}</view>
+  </view>
+  <view wx:if="{{role}}" class="input_css">
+    <view style="color:#858585;">角色：</view>
+    <view>{{role}}</view>
+  </view>
+  <button bindtap="tipexit" class="cu-btn block bg-white lg exit">
+    <text class="cuIcon-exit"></text>注销</button>
+</view>

@@ -1,1 +1,21 @@
 /* pages/Myinformation/Myinformation.wxss */
+.input_css {
+  border-bottom: 2px #E6F8FA solid;
+  width: 88%;
+  height: 60px;
+  margin-left: 6%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  vertical-align: center;
+  flex-direction: row;
+}
+
+.exit {
+  border: 1px solid #e5f2fe;
+  width: 88%;
+  margin-left: 6%;
+  margin-top: 10px;
+  height: 40px;
+  border-radius: 10px;
+}

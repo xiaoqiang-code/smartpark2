@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText":"入厂签证审核",
+  "enablePullDownRefresh":true,
+  "backgroundColor": "#1380e2"
+}
